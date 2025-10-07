@@ -2,8 +2,6 @@ import asyncio
 
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient
 
-from ulam.utils.partial_messages import StreamPrintHandler
-
 options = ClaudeAgentOptions(
     include_partial_messages=True,
     model="claude-sonnet-4-5",
@@ -17,8 +15,6 @@ options = ClaudeAgentOptions(
 
 async def main():
     async with ClaudeSDKClient(options=options) as client:
-        print_handler = StreamPrintHandler(use_colors=True)
-
         while True:
             prompt = input("You: ")
             if prompt == "exit":
@@ -26,11 +22,9 @@ async def main():
 
             await client.query(prompt)
 
-            # Process response - handles all message types
+            # Process response
             async for message in client.receive_response():
-                print_handler.process_message(message)
-
-            print_handler.finalize()
+                print(message)
 
 
 asyncio.run(main())
