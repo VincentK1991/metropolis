@@ -6,6 +6,9 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "claude-agent-sdk>=0.1.0",
+    "httpx>=0.28.1",
+    "openpyxl>=3.1.5",
+    "python-pptx>=1.0.2",
 ]
 
 [project.optional-dependencies]

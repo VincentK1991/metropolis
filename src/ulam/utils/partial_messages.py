@@ -135,10 +135,17 @@ class StreamPrintHandler:
                 f"\n{self.TOOL_USE_COLOR}🔧 Tool Use: {block.name}{self.RESET_COLOR}",
                 flush=True,
             )
-            print(f"{self.TOOL_USE_COLOR}Input: {block.input}{self.RESET_COLOR}")
         else:
             print(f"\n🔧 Tool Use: {block.name}", flush=True)
-            print(f"Input: {block.input}")
+
+        # Special handling for TodoWrite tool
+        if block.name == "TodoWrite" and "todos" in block.input:
+            self._print_todo_table(block.input["todos"])
+        else:
+            if self.use_colors:
+                print(f"{self.TOOL_USE_COLOR}Input: {block.input}{self.RESET_COLOR}")
+            else:
+                print(f"Input: {block.input}")
 
         self.last_message_type = "tool_use"
 
@@ -168,6 +175,91 @@ class StreamPrintHandler:
             print(content_preview)
 
         self.last_message_type = "tool_result"
+
+    def _print_todo_table(self, todos: list[dict]) -> None:
+        """Print todo list in a nicely formatted table.
+
+        Args:
+            todos: List of todo dictionaries with status, content, etc.
+        """
+        if not todos:
+            return
+
+        # Calculate statistics
+        completed = len([t for t in todos if t["status"] == "completed"])
+        in_progress = len([t for t in todos if t["status"] == "in_progress"])
+        pending = len([t for t in todos if t["status"] == "pending"])
+        total = len(todos)
+
+        # Progress header
+        if self.use_colors:
+            print(
+                f"\n{self.TOOL_USE_COLOR}📋 Todo Progress: "
+                f"{completed}/{total} completed, "
+                f"{in_progress} in progress, "
+                f"{pending} pending{self.RESET_COLOR}"
+            )
+        else:
+            print(
+                f"\n📋 Todo Progress: "
+                f"{completed}/{total} completed, "
+                f"{in_progress} in progress, "
+                f"{pending} pending"
+            )
+
+        # Progress bar
+        if total > 0:
+            progress_ratio = completed / total
+            bar_length = 20
+            filled_length = int(bar_length * progress_ratio)
+            bar = "█" * filled_length + "░" * (bar_length - filled_length)
+            percentage = int(progress_ratio * 100)
+
+            if self.use_colors:
+                print(f"{self.TOOL_USE_COLOR}[{bar}] {percentage}%{self.RESET_COLOR}")
+            else:
+                print(f"[{bar}] {percentage}%")
+
+        # Table header
+        print(
+            "\n┌─────┬─────────────┬─────────────────────────────────────────────────┐"
+        )
+        print("│  #  │   Status    │                    Task                         │")
+        print("├─────┼─────────────┼─────────────────────────────────────────────────┤")
+
+        # Table rows
+        for i, todo in enumerate(todos, 1):
+            status = todo.get("status", "pending")
+            content = todo.get("content", "")
+
+            # Status icons and colors
+            if status == "completed":
+                icon = "✅"
+                status_text = "Completed"
+                color = "\033[32m" if self.use_colors else ""  # Green
+            elif status == "in_progress":
+                icon = "🔧"
+                status_text = "In Progress"
+                color = "\033[33m" if self.use_colors else ""  # Yellow
+            else:  # pending
+                icon = "⏳"
+                status_text = "Pending"
+                color = "\033[37m" if self.use_colors else ""  # White/Gray
+
+            # Truncate content if too long
+            max_content_length = 47
+            if len(content) > max_content_length:
+                content = content[: max_content_length - 3] + "..."
+
+            reset = self.RESET_COLOR if self.use_colors else ""
+
+            print(
+                f"│ {i:2d}  │ {color}{icon} {status_text:<8}{reset} │ "
+                f"{color}{content:<47}{reset} │"
+            )
+
+        # Table footer
+        print("└─────┴─────────────┴─────────────────────────────────────────────────┘")
 
     def reset(self) -> None:
         """Reset the handler state and colors."""

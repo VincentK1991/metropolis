@@ -2,13 +2,16 @@ import asyncio
 
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient
 
+from ulam.tools.test_tool import multiplication_server
 from ulam.utils.partial_messages import StreamPrintHandler
 
 options = ClaudeAgentOptions(
     include_partial_messages=True,
     model="claude-sonnet-4-5",
     max_turns=100,
-    allowed_tools=["Read", "Write", "WebSearch"],
+    permission_mode="bypassPermissions",
+    mcp_servers={"multiplication": multiplication_server},
+    # allowed_tools=["Read", "Write", "WebSearch"],
     env={
         "MAX_THINKING_TOKENS": "8000",
     },

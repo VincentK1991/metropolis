@@ -164,3 +164,8 @@ cython_debug/
 
 # uv
 .uv_cache/
+
+#project specific
+artifacts/
+templates/
+.DS_Store
