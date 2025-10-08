@@ -166,6 +166,8 @@ cython_debug/
 .uv_cache/
 
 #project specific
-artifacts/
-templates/
+# artifacts/
+# templates/
 .DS_Store
+./notebook 
+*.ipynb
