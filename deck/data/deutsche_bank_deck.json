@@ -1,0 +1,586 @@
+{
+  "id": "deck-db-2025-001",
+  "title": "Deutsche Bank: Transformed European Banking Champion",
+  "size": 5,
+  "status": "ready",
+  "createdAt": "2025-10-10T10:00:00Z",
+  "updatedAt": "2025-10-10T10:00:00Z",
+  "asOfDate": "2025-09-30",
+  "deepResearch": {
+    "userQuery": "Deutsche Bank AG | Company Primer",
+    "text": "Deep research analysis on Deutsche Bank covering company overview, financial performance, strategic positioning, competitive landscape, and investment thesis."
+  },
+  "sources": [
+    {
+      "id": "src-001",
+      "label": "1",
+      "title": "Deutsche Bank Annual Report 2024",
+      "uri": "https://example.com/db-ar-2024",
+      "publishedAt": "2025-03-31",
+      "origin": "DR"
+    },
+    {
+      "id": "src-002",
+      "label": "2",
+      "title": "RBC Capital Markets Research",
+      "uri": "https://example.com/rbc-research",
+      "publishedAt": "2025-07-28",
+      "origin": "DR"
+    },
+    {
+      "id": "src-003",
+      "label": "3",
+      "title": "Deutsche Bank H1 2025 Earnings Call",
+      "uri": "https://example.com/db-earnings",
+      "publishedAt": "2025-07-24",
+      "origin": "DR"
+    },
+    {
+      "id": "src-004",
+      "label": "4",
+      "title": "Euromoney Awards 2025 & Banking Industry Research",
+      "uri": "https://www.euromoney.com/article/9hfw4q2xiqkg00gcgsoso4k4o/awards/awards-for-excellence/europes-best-investment-bank-2025-deutsche-bank",
+      "publishedAt": "2025-10-10",
+      "origin": "OTHER"
+    }
+  ],
+  "slides": [
+    {
+      "id": "slide-001",
+      "index": 0,
+      "title": "Executive Summary: Strong Transformation Momentum",
+      "description": "Key performance metrics demonstrate Deutsche Bank's successful transformation",
+      "pattern": "COMPANY_OVERVIEW",
+      "layout": "G3",
+      "blocks": [
+        {
+          "id": "block-001",
+          "kind": "CALLOUT",
+          "slot": 0,
+          "headline": "Return on Tangible Equity",
+          "label": "RoTE H1 2025",
+          "value": "11.0%",
+          "delta": {
+            "value": "+3.9%",
+            "direction": "up"
+          },
+          "asOf": "H1 2025",
+          "citations": [
+            {
+              "sourceLabel": "1"
+            }
+          ]
+        },
+        {
+          "id": "block-002",
+          "kind": "CALLOUT",
+          "slot": 1,
+          "headline": "Cost/Income Ratio",
+          "label": "Efficiency Target",
+          "value": "62.3%",
+          "delta": {
+            "value": "-15.8%",
+            "direction": "down"
+          },
+          "asOf": "H1 2025",
+          "citations": [
+            {
+              "sourceLabel": "1"
+            }
+          ]
+        },
+        {
+          "id": "block-003",
+          "kind": "CALLOUT",
+          "slot": 2,
+          "headline": "CET1 Ratio",
+          "label": "Capital Strength",
+          "value": "14.2%",
+          "delta": {
+            "value": "+40bps",
+            "direction": "up"
+          },
+          "asOf": "Q2 2025"
+        },
+        {
+          "id": "block-004",
+          "kind": "CALLOUT",
+          "slot": 3,
+          "headline": "H1 2025 Revenues",
+          "label": "Revenue Performance",
+          "value": "€16.3B",
+          "delta": {
+            "value": "+6%",
+            "direction": "up"
+          },
+          "asOf": "H1 2025"
+        },
+        {
+          "id": "block-005",
+          "kind": "BULLETS",
+          "slot": 4,
+          "headline": "Key Highlights",
+          "bullets": [
+            "**Transformation Execution:** Exceeding targets with 11.0% RoTE vs. >10% target",
+            "**Global IB Ranking:** Improved from 11th to 7th, gaining 70bps market share to 2.6%",
+            "**Shareholder Distributions:** €2.1B for 2025 (50% payout ratio)",
+            "**Capital Position:** Strong position enabling aggressive returns above 14% threshold"
+          ],
+          "bulletCitations": {
+            "0": [{"sourceLabel": "1"}],
+            "1": [{"sourceLabel": "3"}],
+            "2": [{"sourceLabel": "1"}]
+          }
+        },
+        {
+          "id": "block-006",
+          "kind": "FOOTNOTE",
+          "slot": 5,
+          "sourceLabels": ["1", "2", "3"],
+          "text": "RoTE = Return on Tangible Equity; CET1 = Common Equity Tier 1"
+        }
+      ]
+    },
+    {
+      "id": "slide-002",
+      "index": 1,
+      "title": "Global Hausbank: Unique Strategic Positioning",
+      "description": "Deutsche Bank's distinctive business model and competitive advantages",
+      "pattern": "COMPANY_OVERVIEW",
+      "layout": "G2",
+      "blocks": [
+        {
+          "id": "block-007",
+          "kind": "BULLETS",
+          "slot": 0,
+          "headline": "Global Hausbank Model",
+          "bullets": [
+            "**Market Position:** Premier European alternative to US bulge bracket banks",
+            "**Global Reach:** Comprehensive financial solutions across 57 countries with 90,130 employees",
+            "**Hausbank Strategy:** First point of contact for all client financial matters - domestic and international",
+            "**Cross-Divisional Model:** Collaboration driving enhanced client penetration",
+            "**Corporate Bank Leadership:** Leading position serving German Mittelstand"
+          ]
+        },
+        {
+          "id": "block-008",
+          "kind": "TABLE",
+          "slot": 1,
+          "headline": "Business Segment Overview (2024)",
+          "headers": ["Segment", "Revenue (€B)", "Key Focus", "Market Position"],
+          "rows": [
+            ["Investment Bank", "10.6", "FIC & Origination", "Leading European IB"],
+            ["Private Bank", "9.4", "Wealth & Personal", "Omni-channel approach"],
+            ["Corporate Bank", "7.5", "Treasury & Services", "#1 in Germany"],
+            ["Asset Management", "2.6", "Active/Passive/Alt", "€1T+ AUM"]
+          ],
+          "rowBands": true,
+          "formats": {
+            "1": "currency"
+          },
+          "cellCitations": {
+            "1,0": [{"sourceLabel": "1"}],
+            "2,0": [{"sourceLabel": "1"}],
+            "3,0": [{"sourceLabel": "1"}],
+            "4,0": [{"sourceLabel": "1"}]
+          }
+        },
+        {
+          "id": "block-009",
+          "kind": "BULLETS",
+          "slot": 2,
+          "headline": "Strategic Differentiators",
+          "bullets": [
+            "**Technology Partnerships:** Google Cloud migration for IT flexibility and AI adoption",
+            "**Early AI Implementation:** 'Paula' chatbot and 'dbLumina' knowledge tools",
+            "**Sustainability Leadership:** €373B cumulative sustainable finance volumes",
+            "**Digital Innovation:** 1,700+ AI hackathon participants, 3,400+ cloud engineers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "slide-003",
+      "index": 2,
+      "title": "Strong Financial Performance & Transformation Progress",
+      "description": "Five-year financial trends showing marked improvement",
+      "pattern": "HISTORICAL_FINANCIALS",
+      "layout": "G1",
+      "blocks": [
+        {
+          "id": "block-010",
+          "kind": "TABLE",
+          "slot": 0,
+          "headline": "Income Statement Evolution (€ millions)",
+          "headers": ["Metric", "2020", "2021", "2022", "2023", "2024"],
+          "rows": [
+            ["Net Interest Income", 9754, 10640, 12757, 16127, 15161],
+            ["Commissions & Fees", 9424, 10954, 9838, 9206, 10372],
+            ["Total Noninterest Expenses", 21216, 21500, 20390, 21695, 22971],
+            ["Profit Before Tax", 624, 2510, 5447, 7895, 6703],
+            ["Net Income", 495, 2365, 5554, 6452, 4481]
+          ],
+          "rowBands": true,
+          "formats": {
+            "1": "integer",
+            "2": "integer",
+            "3": "integer",
+            "4": "integer",
+            "5": "integer"
+          },
+          "footnotes": ["2024 profit impacted by €1.3B Postbank litigation provision"],
+          "cellCitations": {
+            "1,0": [{"sourceLabel": "1"}]
+          }
+        },
+        {
+          "id": "block-011",
+          "kind": "CHART",
+          "slot": 1,
+          "headline": "Return on Tangible Equity Transformation",
+          "chartType": "LINE",
+          "series": [
+            {
+              "name": "RoTE %",
+              "points": [
+                {"x": "2020", "y": 0.2},
+                {"x": "2021", "y": 3.8},
+                {"x": "2022", "y": 9.4},
+                {"x": "2023", "y": 17.8},
+                {"x": "2024", "y": 12.6},
+                {"x": "H1 2025", "y": 11.0}
+              ]
+            }
+          ],
+          "yAxisFormat": "percent",
+          "eventMarkers": [
+            {"x": "2019", "label": "Transformation Launch"},
+            {"x": "H1 2025", "label": "Target: >10%"}
+          ]
+        },
+        {
+          "id": "block-012",
+          "kind": "CHART",
+          "slot": 2,
+          "headline": "Cost/Income Ratio Improvement",
+          "chartType": "COLUMN",
+          "series": [
+            {
+              "name": "Cost/Income %",
+              "points": [
+                {"x": "2020", "y": 88},
+                {"x": "2021", "y": 84},
+                {"x": "2022", "y": 75},
+                {"x": "2023", "y": 60},
+                {"x": "2024", "y": 68},
+                {"x": "H1 2025", "y": 62.3}
+              ]
+            }
+          ],
+          "yAxisFormat": "percent"
+        }
+      ],
+      "citations": [
+        {
+          "sourceLabel": "1"
+        }
+      ]
+    },
+    {
+      "id": "slide-004",
+      "index": 3,
+      "title": "Capital Strength & Shareholder Returns",
+      "description": "Robust capital position enabling significant distributions",
+      "pattern": "CUSTOM",
+      "layout": "G4",
+      "blocks": [
+        {
+          "id": "block-013",
+          "kind": "TABLE",
+          "slot": 0,
+          "headline": "Capital Position Evolution",
+          "headers": ["Metric", "2020", "2021", "2022", "2023", "2024", "Q2 2025"],
+          "rows": [
+            ["CET1 Ratio (%)", "12.8", "13.2", "13.4", "13.7", "14.0", "14.2"],
+            ["Tier 1 Ratio (%)", "15.4", "15.8", "15.8", "16.1", "17.0", null],
+            ["Total Assets (€B)", 1325, 1324, 1356, 1312, 1367, null],
+            ["Leverage Ratio (%)", null, null, null, null, null, "4.7"]
+          ],
+          "rowBands": true,
+          "formats": {
+            "1": "percent",
+            "2": "percent",
+            "3": "integer"
+          }
+        },
+        {
+          "id": "block-014",
+          "kind": "BULLETS",
+          "slot": 1,
+          "headline": "Capital Allocation Policy",
+          "bullets": [
+            "**Payout Ratio:** 50% of net income distributed through dividends and buybacks",
+            "**2025 Distributions:** €2.1B total - €750M buybacks + €1.3B dividends (€0.68/share)",
+            "**Cumulative Returns:** €5.4B total distributions since 2022, exceeding €5B goal",
+            "**Distribution Flexibility:** Additional capital above 14% CET1 threshold available for distribution",
+            "**Multi-Year Target:** On track to exceed €8B distributions for 2021-2025 period"
+          ],
+          "dense": false
+        },
+        {
+          "id": "block-015",
+          "kind": "BULLETS",
+          "slot": 2,
+          "headline": "Liquidity Metrics (Q2 2025)",
+          "bullets": [
+            "**Liquidity Coverage Ratio (LCR):** 136% with €62B surplus above 100% regulatory requirement",
+            "**Net Stable Funding Ratio (NSFR):** 120% with €107B surplus, at high end of 115-120% target range",
+            "**High Quality Liquid Assets (HQLA):** €232B portfolio of liquid securities",
+            "**Stressed Liquidity Position:** €75B vs. €56B at year-end 2024, demonstrating enhanced resilience"
+          ]
+        },
+        {
+          "id": "block-016",
+          "kind": "CALLOUT",
+          "slot": 3,
+          "headline": "Buffer Above MDA",
+          "label": "Capital Cushion",
+          "value": "252 bps",
+          "asOf": "Q2 2025"
+        }
+      ]
+    },
+    {
+      "id": "slide-005",
+      "index": 4,
+      "title": "Sharply Divided Analyst Perspectives",
+      "description": "Bull and bear cases reflect debate on transformation sustainability",
+      "pattern": "ANALYST_PERSPECTIVES",
+      "layout": "G2",
+      "blocks": [
+        {
+          "id": "block-017",
+          "kind": "BULLETS",
+          "slot": 0,
+          "headline": "Bull Case (RBC Capital Markets)",
+          "bullets": [
+            "**Path to 12% ROTE:** Through cost and capital optimization",
+            "**Capital Efficiencies:** €30B achieved (high end of target)",
+            "**Operational Efficiency:** 90% progress on €2.5B program",
+            "**Strong Execution:** Consistently beating broker consensus",
+            "**Price Target:** €29 with upside scenario to €39"
+          ],
+          "bulletCitations": {
+            "0": [{"sourceLabel": "2"}],
+            "1": [{"sourceLabel": "2"}],
+            "4": [{"sourceLabel": "2"}]
+          }
+        },
+        {
+          "id": "block-018",
+          "kind": "BULLETS",
+          "slot": 1,
+          "headline": "Bear Case Concerns",
+          "bullets": [
+            "**ROE/COE Gap:** Forecasted 9% ROE may not cover 11.1% cost of equity (Metzler)",
+            "**Autonomous Research:** Maintains 'Underperform' at €20.80 target",
+            "**Litigation Risk:** €1.6B provisions + ongoing regulatory scrutiny",
+            "**Market Share Risk:** Potential 7% IB loss to US bulge brackets",
+            "**Cost Control Sustainability:** Questioned (€2.8B litigation since 2021)"
+          ],
+          "bulletCitations": {
+            "0": [{"sourceLabel": "2"}]
+          }
+        },
+        {
+          "id": "block-019",
+          "kind": "TABLE",
+          "slot": 2,
+          "headline": "Analyst Price Targets",
+          "headers": ["Firm", "Rating", "Target (€)", "Methodology"],
+          "rows": [
+            ["RBC Capital Markets", "Outperform", "29.00", "P/B (12% CoE)"],
+            ["Metzler", "Hold", "26.80", "ROE/COE Model"],
+            ["HSBC", "Hold", "19.50", "Sum-of-Parts"],
+            ["Autonomous", "Underperform", "20.80", "DCF SOTP"]
+          ],
+          "formats": {
+            "2": "currency"
+          }
+        }
+      ],
+      "citations": [
+        {
+          "sourceLabel": "2"
+        }
+      ]
+    },
+    {
+      "id": "slide-006",
+      "index": 5,
+      "title": "Industry Context: Banking Sector Transformation",
+      "description": "Key trends reshaping Deutsche Bank's operating environment",
+      "pattern": "CUSTOM",
+      "layout": "G5",
+      "blocks": [
+        {
+          "id": "block-020",
+          "kind": "BULLETS",
+          "slot": 0,
+          "headline": "Digital & AI Revolution",
+          "bullets": [
+            "**Investment Scale:** €1B+ in 'change the bank' initiatives in 2024",
+            "**AI Training:** 3,500+ employees completed GenAI training modules",
+            "**Digital Growth:** 63% increase in digital transactions since 2019",
+            "**Branch Decline:** 61% decrease in branch-based transactions",
+            "**Cloud Partnership:** Google Cloud for IT modernization"
+          ]
+        },
+        {
+          "id": "block-021",
+          "kind": "BULLETS",
+          "slot": 1,
+          "headline": "Regulatory Evolution",
+          "bullets": [
+            "**Basel III Output Floor:** 72.5% cap on internal models by 2030",
+            "**CRR3/CRD6:** Effective January 2025",
+            "**DORA Compliance:** Digital Operational Resilience Act",
+            "**MiCA Regulation:** Crypto-assets framework",
+            "**Capital Impact:** Estimated 9-16% increase in minimum requirements"
+          ]
+        },
+        {
+          "id": "block-022",
+          "kind": "CHART",
+          "slot": 2,
+          "headline": "Global Investment Banking Fee Recovery",
+          "chartType": "COLUMN",
+          "series": [
+            {
+              "name": "O&A Fee Pool (€B)",
+              "points": [
+                {"x": "2021", "y": 78},
+                {"x": "2022", "y": 62},
+                {"x": "2023", "y": 64},
+                {"x": "2024", "y": 80}
+              ]
+            },
+            {
+              "name": "M&A Fees (€B)",
+              "points": [
+                {"x": "2021", "y": 35},
+                {"x": "2022", "y": 28},
+                {"x": "2023", "y": 27},
+                {"x": "2024", "y": 30}
+              ]
+            }
+          ],
+          "yAxisFormat": "integer"
+        },
+        {
+          "id": "block-023",
+          "kind": "BULLETS",
+          "slot": 3,
+          "headline": "Competitive Dynamics (2025 Outlook)",
+          "bullets": [
+            "**Fintech Evolution:** $1.5T revenue trajectory by 2030, with cooperation over competition emerging as prevailing strategy",
+            "**Private Credit Partnerships:** Banks forging alliances (Citi-Apollo, Lloyds-Oaktree) rather than pure competition",
+            "**Deutsche Bank Recognition:** Named Europe's best investment bank 2025 by Euromoney, gaining wallet share across industry groups",
+            "**Digital Banking Surge:** Europe's market expanding from $10.1B (2025) to $35.4B (2033) at 16.9% CAGR",
+            "**US Bank Dominance:** Top 4 US banks (JPM, GS, BofA, MS) hold ~50% global IB market share, but European alternatives gaining"
+          ]
+        },
+        {
+          "id": "block-024",
+          "kind": "CALLOUT",
+          "slot": 4,
+          "headline": "ESG Finance Volume",
+          "label": "Sustainable Finance 2024",
+          "value": "€93B",
+          "asOf": "2024"
+        }
+      ]
+    },
+    {
+      "id": "slide-007",
+      "index": 6,
+      "title": "Key Risks & Challenges",
+      "description": "Material risk factors to monitor in Deutsche Bank's transformation journey",
+      "pattern": "CUSTOM",
+      "layout": "G4",
+      "blocks": [
+        {
+          "id": "block-025",
+          "kind": "BULLETS",
+          "slot": 0,
+          "headline": "Operational & Legal Risks",
+          "bullets": [
+            "**Litigation Overhang:** €1.6B provisions outstanding with €0.7B contingent liabilities",
+            "**Postbank Legacy:** €1.3B provision in 2024 for shareholder claims from 2010 acquisition",
+            "**Regulatory Scrutiny:** Ongoing investigations into greenwashing at DWS and customer complaints",
+            "**Cost Containment:** €2.8B litigation since 2021 raises sustainability questions",
+            "**Operational Risk:** Increased cybersecurity threats and third-party dependencies"
+          ],
+          "bulletCitations": {
+            "0": [{"sourceLabel": "2"}],
+            "1": [{"sourceLabel": "1"}]
+          }
+        },
+        {
+          "id": "block-026",
+          "kind": "BULLETS",
+          "slot": 1,
+          "headline": "Market & Competitive Risks",
+          "bullets": [
+            "**US Competition Intensity:** Potential 7% market share loss as bulge brackets reinvest capital",
+            "**Private Credit Disruption:** Growing competition in lending markets, particularly US",
+            "**IB Revenue Sensitivity:** High exposure to volatile investment banking fee environment",
+            "**Fintech Disruption:** Big tech entry into financial services in unregulated segments",
+            "**European Banking Consolidation:** Risk of dilutive M&A given low share price"
+          ],
+          "bulletCitations": {
+            "0": [{"sourceLabel": "2"}]
+          }
+        },
+        {
+          "id": "block-027",
+          "kind": "BULLETS",
+          "slot": 2,
+          "headline": "Regulatory & Capital Risks",
+          "bullets": [
+            "**Basel III Impact:** CRR3 implementation requires continued RWA optimization",
+            "**Capital Efficiency Gap:** RoCET1 ~16% vs. US banks using 10-12% hurdle rates",
+            "**Stress Test Exposure:** -477bps CET1 depletion under adverse scenarios",
+            "**Liquidity Acceleration:** Instant payments regulation may increase deposit volatility",
+            "**MREL/TLAC Compliance:** Ongoing requirement to maintain loss-absorbing capacity"
+          ]
+        },
+        {
+          "id": "block-028",
+          "kind": "BULLETS",
+          "slot": 3,
+          "headline": "Macroeconomic & Geopolitical Risks",
+          "bullets": [
+            "**German Economic Weakness:** Exposure to potential domestic slowdown impacts corporate lending",
+            "**Interest Rate Sensitivity:** NIM pressure from ECB rate cuts and deposit competition",
+            "**Geopolitical Uncertainty:** Ukraine and Middle East conflicts affecting client activity",
+            "**Commercial Real Estate:** €227M Q2 2025 provisions for US CRE exposure",
+            "**Credit Quality:** Provision ratio increased to 38bps of average loans in 2024"
+          ],
+          "bulletCitations": {
+            "0": [{"sourceLabel": "1"}],
+            "1": [{"sourceLabel": "2"}]
+          }
+        }
+      ],
+      "citations": [
+        {
+          "sourceLabel": "1"
+        },
+        {
+          "sourceLabel": "2"
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 import asyncio
 
-from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient
+from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient, HookMatcher
 
+from ulam.hooks import validate_deck_on_write
 from ulam.tools.test_tool import multiplication_server
 from ulam.utils.partial_messages import StreamPrintHandler
 
@@ -12,6 +13,11 @@ options = ClaudeAgentOptions(
     permission_mode="bypassPermissions",
     mcp_servers={"multiplication": multiplication_server},
     # allowed_tools=["Read", "Write", "WebSearch"],
+    hooks={
+        "PostToolUse": [
+            HookMatcher(hooks=[validate_deck_on_write])
+        ]
+    },
     env={
         "MAX_THINKING_TOKENS": "8000",
     },
@@ -36,4 +42,5 @@ async def main():
             print_handler.finalize()
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
