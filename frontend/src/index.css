@@ -2,18 +2,195 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Add emoji font support */
+/* CSS Custom Properties for Theme */
 @layer base {
+  :root {
+    --nouveau-curve-radius: 1rem;
+    --deco-angle: 0.25rem;
+    --transition-speed: 300ms;
+  }
+
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial,
                  'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
                  'Noto Color Emoji';
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
   }
 
   /* Ensure all text elements can display emojis */
   * {
     font-family: inherit;
+  }
+
+  /* Smooth theme transitions */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: ease-in-out;
+    transition-duration: var(--transition-speed);
+  }
+}
+
+/* Art Nouveau Decorative Elements - Light Mode */
+@layer components {
+  .nouveau-border {
+    border-radius: var(--nouveau-curve-radius);
+    border: 3px solid theme('colors.nouveau-lavender.300');
+    box-shadow: 0 4px 12px rgba(161, 145, 207, 0.25);
+  }
+
+  .nouveau-card {
+    @apply nouveau-border bg-white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nouveau-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(
+      90deg,
+      theme('colors.nouveau-rose.300') 0%,
+      theme('colors.nouveau-lavender.300') 50%,
+      theme('colors.nouveau-mint.300') 100%
+    );
+    opacity: 0.9;
+  }
+
+  /* Art Nouveau curved scrollbar for light mode */
+  .nouveau-scrollbar::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  .nouveau-scrollbar::-webkit-scrollbar-track {
+    background: theme('colors.nouveau-cream.100');
+    border-radius: 10px;
+  }
+
+  .nouveau-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      theme('colors.nouveau-lavender.300'),
+      theme('colors.nouveau-rose.300')
+    );
+    border-radius: 10px;
+    border: 2px solid theme('colors.nouveau-cream.100');
+  }
+
+  .nouveau-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      180deg,
+      theme('colors.nouveau-lavender.400'),
+      theme('colors.nouveau-rose.400')
+    );
+  }
+}
+
+/* Art Deco Decorative Elements - Dark Mode */
+@layer components {
+  .deco-border {
+    border-radius: var(--deco-angle);
+    border: 2px solid theme('colors.deco-gold.500');
+    box-shadow: 0 4px 12px rgba(212, 160, 55, 0.2);
+  }
+
+  .deco-card {
+    @apply deco-border;
+    background: linear-gradient(
+      135deg,
+      theme('colors.deco-navy.500') 0%,
+      theme('colors.deco-navy.400') 100%
+    );
+    position: relative;
+    overflow: hidden;
+  }
+
+  .deco-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      theme('colors.deco-gold.400') 0%,
+      theme('colors.deco-emerald.400') 50%,
+      theme('colors.deco-gold.400') 100%
+    );
+  }
+
+  .deco-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      theme('colors.deco-gold.400') 0%,
+      theme('colors.deco-burgundy.400') 50%,
+      theme('colors.deco-gold.400') 100%
+    );
+  }
+
+  /* Art Deco geometric scrollbar for dark mode */
+  .dark .deco-scrollbar::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  .dark .deco-scrollbar::-webkit-scrollbar-track {
+    background: theme('colors.deco-navy.500');
+    border-radius: 2px;
+  }
+
+  .dark .deco-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      theme('colors.deco-gold.400'),
+      theme('colors.deco-emerald.500')
+    );
+    border-radius: 2px;
+    border: 2px solid theme('colors.deco-navy.500');
+  }
+
+  .dark .deco-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      180deg,
+      theme('colors.deco-gold.300'),
+      theme('colors.deco-emerald.400')
+    );
+  }
+}
+
+/* Utility classes for decorative patterns */
+@layer utilities {
+  .pattern-nouveau {
+    background-image:
+      radial-gradient(circle at 20% 50%, theme('colors.nouveau-lavender.200') 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, theme('colors.nouveau-rose.200') 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, theme('colors.nouveau-mint.200') 0%, transparent 50%),
+      radial-gradient(circle at 60% 70%, theme('colors.nouveau-sage.200') 0%, transparent 40%);
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .pattern-deco {
+    background-image:
+      linear-gradient(135deg, theme('colors.deco-navy.500') 0%, transparent 50%),
+      linear-gradient(45deg, theme('colors.deco-burgundy.500') 0%, transparent 50%);
   }
 }
 

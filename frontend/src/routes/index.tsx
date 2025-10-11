@@ -25,7 +25,7 @@ function Index() {
         onSelectSession={switchToSession}
         isLoading={isLoadingHistory}
       />
-      <div className="flex-1 overflow-hidden p-4">
+      <div className="flex-1 overflow-hidden">
         <ChatPanel />
       </div>
     </div>

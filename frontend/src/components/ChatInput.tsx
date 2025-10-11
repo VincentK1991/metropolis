@@ -40,7 +40,7 @@ export const ChatInput = ({
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             rows={1}
-            className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            className="w-full resize-none rounded-2xl dark:rounded-lg border-2 border-nouveau-lavender/40 dark:border-deco-gold/40 bg-white/80 dark:bg-deco-navy-400 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-500 px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-nouveau-lavender dark:focus:ring-deco-gold focus:border-transparent text-base transition-all duration-200"
             style={{
               minHeight: '48px',
               maxHeight: '150px',
@@ -50,7 +50,7 @@ export const ChatInput = ({
 
           {/* Character count indicator (optional) */}
           {input.length > 0 && (
-            <div className="absolute bottom-2 right-3 text-xs text-gray-400">
+            <div className="absolute bottom-2 right-3 text-xs text-gray-400 dark:text-gray-500">
               {input.length}
             </div>
           )}
@@ -60,10 +60,10 @@ export const ChatInput = ({
         <button
           type="submit"
           disabled={!input.trim()}
-          className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+          className={`px-6 py-3 rounded-2xl dark:rounded-lg font-medium transition-all duration-200 ${
             input.trim()
-              ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:shadow-lg hover:scale-105'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              ? 'bg-gradient-to-br from-nouveau-lavender to-nouveau-rose dark:from-deco-emerald dark:to-deco-gold text-gray-800 dark:text-white hover:shadow-lg hover:scale-105 border-2 border-nouveau-lavender/30 dark:border-deco-gold/50'
+              : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed border-2 border-gray-300 dark:border-gray-600'
           }`}
         >
           Send
@@ -71,9 +71,9 @@ export const ChatInput = ({
       </div>
 
       {/* Helper Text */}
-      <div className="mt-2 text-xs text-gray-500">
-        Press <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded">Enter</kbd> to send,
-        <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded ml-1">Shift+Enter</kbd> for new line
+      <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        Press <kbd className="px-1.5 py-0.5 bg-nouveau-cream dark:bg-deco-navy-400 border border-nouveau-sage/40 dark:border-deco-silver/40 rounded">Enter</kbd> to send,
+        <kbd className="px-1.5 py-0.5 bg-nouveau-cream dark:bg-deco-navy-400 border border-nouveau-sage/40 dark:border-deco-silver/40 rounded ml-1">Shift+Enter</kbd> for new line
       </div>
     </form>
   )
