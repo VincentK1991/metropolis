@@ -1,11 +1,12 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+import { AgentChatProvider } from '../contexts/AgentChatContext'
 
 export const Route = createRootRoute({
   component: () => (
-    <>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <nav className="bg-white shadow-lg">
+    <AgentChatProvider>
+      <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <nav className="bg-white shadow-lg flex-shrink-0">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
               <div className="flex space-x-8">
@@ -31,11 +32,11 @@ export const Route = createRootRoute({
             </div>
           </div>
         </nav>
-        <main>
+        <main className="flex-1 overflow-hidden">
           <Outlet />
         </main>
       </div>
       <TanStackRouterDevtools />
-    </>
+    </AgentChatProvider>
   ),
 })

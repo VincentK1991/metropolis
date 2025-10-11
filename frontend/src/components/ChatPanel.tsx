@@ -1,10 +1,10 @@
 import { useRef, useEffect } from 'react'
 import { ChatMessage } from './ChatMessage'
 import { ChatInput } from './ChatInput'
-import { useAgentChat } from '../hooks/useAgentChat'
+import { useAgentChatContext } from '../contexts/AgentChatContext'
 
 export const ChatPanel = () => {
-  const { messages, isConnected, isStreaming, error, sendMessage } = useAgentChat()
+  const { messages, isConnected, isStreaming, error, sendMessage, sessionId } = useAgentChatContext()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Auto-scroll to bottom when new messages arrive
@@ -36,6 +36,11 @@ export const ChatPanel = () => {
             <p className="text-sm text-blue-100 mt-1">
               {isConnected ? 'Connected and ready' : 'Connecting...'}
             </p>
+            {sessionId && (
+              <p className="text-xs text-blue-200 mt-1 font-mono">
+                Session: {sessionId}
+              </p>
+            )}
           </div>
           <div className="flex items-center gap-2">
             {/* Connection Status Indicator */}

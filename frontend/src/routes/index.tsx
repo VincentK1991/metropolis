@@ -1,14 +1,31 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { ChatPanel } from '../components/ChatPanel'
+import { SessionSidebar } from '../components/SessionSidebar'
+import { useAgentChatContext } from '../contexts/AgentChatContext'
 
 export const Route = createFileRoute('/')({
   component: Index,
 })
 
 function Index() {
+  const {
+    sessionId,
+    availableSessions,
+    isLoadingHistory,
+    startNewSession,
+    switchToSession,
+  } = useAgentChatContext()
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="flex h-full overflow-hidden">
+      <SessionSidebar
+        sessionId={sessionId}
+        availableSessions={availableSessions}
+        onNewSession={startNewSession}
+        onSelectSession={switchToSession}
+        isLoading={isLoadingHistory}
+      />
+      <div className="flex-1 overflow-hidden p-4">
         <ChatPanel />
       </div>
     </div>

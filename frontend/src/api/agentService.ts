@@ -58,6 +58,19 @@ export class AgentWebSocketService {
     this.ws.send(JSON.stringify(message))
   }
 
+  sendInitSession(sessionId: string | null) {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+      throw new Error('WebSocket is not connected')
+    }
+
+    const message = {
+      type: 'init_session',
+      claude_session_id: sessionId,
+    }
+
+    this.ws.send(JSON.stringify(message))
+  }
+
   onMessage(callback: (message: WebSocketMessage) => void) {
     this.messageCallbacks.push(callback)
     return () => {

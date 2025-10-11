@@ -1,15 +1,22 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { agentService } from '../api/agentService'
 import { ChatMessage, MessageContent, WebSocketMessage } from '../types/chat'
+import { SessionInfo } from '../types/session'
 
 interface UseAgentChatResult {
   messages: ChatMessage[]
   isConnected: boolean
   isStreaming: boolean
   error: string | null
+  sessionId: string | null
+  isLoadingHistory: boolean
+  availableSessions: SessionInfo[]
   sendMessage: (text: string) => void
   connect: () => Promise<void>
   disconnect: () => void
+  startNewSession: () => Promise<void>
+  switchToSession: (sessionId: string) => Promise<void>
+  loadAvailableSessions: () => Promise<void>
 }
 
 export const useAgentChat = (): UseAgentChatResult => {
@@ -17,6 +24,9 @@ export const useAgentChat = (): UseAgentChatResult => {
   const [isConnected, setIsConnected] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [sessionId, setSessionId] = useState<string | null>(null)
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false)
+  const [availableSessions, setAvailableSessions] = useState<SessionInfo[]>([])
 
   // Use ref to track current streaming message
   const currentMessageRef = useRef<ChatMessage | null>(null)
@@ -35,6 +45,66 @@ export const useAgentChat = (): UseAgentChatResult => {
   const disconnect = useCallback(() => {
     agentService.disconnect()
     setIsConnected(false)
+  }, [])
+
+  const loadAvailableSessions = useCallback(async () => {
+    try {
+      const response = await fetch('http://localhost:8088/api/sessions')
+      const data = await response.json()
+      setAvailableSessions(data.sessions || [])
+    } catch (err) {
+      console.error('Failed to load sessions:', err)
+    }
+  }, [])
+
+  const startNewSession = useCallback(async () => {
+    // Clear messages immediately
+    setMessages([])
+    currentMessageRef.current = null
+    setSessionId(null)
+    localStorage.removeItem('lastSessionId')
+
+    // Disconnect current WS
+    agentService.disconnect()
+    setIsConnected(false)
+
+    // Connect new WS
+    try {
+      await agentService.connect()
+      setIsConnected(true)
+      setError(null)
+
+      // Send init_session for new session
+      agentService.sendInitSession(null)
+    } catch (err) {
+      setError('Failed to connect to agent service')
+      setIsConnected(false)
+    }
+  }, [])
+
+  const switchToSession = useCallback(async (newSessionId: string) => {
+    // Clear messages immediately
+    setMessages([])
+    currentMessageRef.current = null
+    setIsLoadingHistory(true)
+
+    // Disconnect current WS
+    agentService.disconnect()
+    setIsConnected(false)
+
+    // Connect new WS
+    try {
+      await agentService.connect()
+      setIsConnected(true)
+      setError(null)
+
+      // Send init_session for the selected session
+      agentService.sendInitSession(newSessionId)
+    } catch (err) {
+      setError('Failed to connect to agent service')
+      setIsConnected(false)
+      setIsLoadingHistory(false)
+    }
   }, [])
 
   const sendMessage = useCallback((text: string) => {
@@ -76,6 +146,28 @@ export const useAgentChat = (): UseAgentChatResult => {
 
   useEffect(() => {
     const unsubscribeMessage = agentService.onMessage((message: WebSocketMessage) => {
+      // Handle session_ready message
+      if (message.type === 'session_ready') {
+        const sessionReadyMsg = message as any
+        setSessionId(sessionReadyMsg.claude_session_id)
+        localStorage.setItem('lastSessionId', sessionReadyMsg.claude_session_id)
+
+        // Load historical messages
+        if (sessionReadyMsg.messages && sessionReadyMsg.messages.length > 0) {
+          const historicalMessages = sessionReadyMsg.messages.map((msg: any) => ({
+            id: `${msg.role}-${msg.sequence}`,
+            role: msg.role,
+            contents: msg.content_blocks,
+            timestamp: new Date(msg.created_at),
+          }))
+          setMessages(historicalMessages)
+        }
+
+        setIsLoadingHistory(false)
+        loadAvailableSessions()
+        return
+      }
+
       if (message.type === 'complete') {
         // Finalize the current message
         // Note: The message is already in the messages array from streaming updates
@@ -160,24 +252,59 @@ export const useAgentChat = (): UseAgentChatResult => {
       unsubscribeClose()
       unsubscribeOpen()
     }
-  }, [])
+  }, [loadAvailableSessions])
 
-  // Auto-connect on mount
+  // Auto-connect and initialize session on mount
   useEffect(() => {
-    connect()
-    return () => {
-      disconnect()
+    let isMounted = true
+
+    const initialize = async () => {
+      try {
+        await agentService.connect()
+        if (isMounted) {
+          setIsConnected(true)
+          setError(null)
+
+          // Check for existing session and initialize
+          const lastSessionId = localStorage.getItem('lastSessionId')
+          if (lastSessionId) {
+            // Resume last session
+            agentService.sendInitSession(lastSessionId)
+          } else {
+            // Start new session
+            agentService.sendInitSession(null)
+          }
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError('Failed to connect to agent service')
+          setIsConnected(false)
+        }
+      }
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+    initialize()
+
+    return () => {
+      isMounted = false
+      agentService.disconnect()
+    }
+  }, []) // Only run once on mount
 
   return {
     messages,
     isConnected,
     isStreaming,
     error,
+    sessionId,
+    isLoadingHistory,
+    availableSessions,
     sendMessage,
     connect,
     disconnect,
+    startNewSession,
+    switchToSession,
+    loadAvailableSessions,
   }
 }
 
