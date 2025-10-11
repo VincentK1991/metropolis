@@ -13,13 +13,9 @@ options = ClaudeAgentOptions(
     permission_mode="bypassPermissions",
     mcp_servers={"multiplication": multiplication_server},
     # allowed_tools=["Read", "Write", "WebSearch"],
-    hooks={
-        "PostToolUse": [
-            HookMatcher(hooks=[validate_deck_on_write])
-        ]
-    },
+    hooks={"PostToolUse": [HookMatcher(hooks=[validate_deck_on_write])]},
     env={
-        "MAX_THINKING_TOKENS": "8000",
+        "MAX_THINKING_TOKENS": "4000",
     },
 )
 
