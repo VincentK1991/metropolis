@@ -228,14 +228,13 @@ class SessionStore:
             {"claude_session_id": claude_session_id},
             {
                 "$inc": {
-                    "total_cost_usd": cost_usd,
                     "total_input_tokens": input_tokens,
                     "total_output_tokens": output_tokens,
                 },
-                "$set": {"updated_at": datetime.now(UTC)},
+                "$set": {"total_cost_usd": cost_usd, "updated_at": datetime.now(UTC)},
             },
         )
 
     async def close(self):
         """Close the MongoDB connection."""
-        self.client.close()
+        await self.client.close()

@@ -27,11 +27,11 @@ export const ChatPanel = () => {
   }
 
   return (
-    <div className="flex flex-col h-full bg-nouveau-cream dark:bg-deco-navy-500 shadow-xl dark:shadow-2xl overflow-hidden border-l-4 border-nouveau-lavender/60 dark:border-deco-gold/40 transition-all duration-300">
+    <div className="flex flex-col h-full backdrop-blur-xl bg-amber/70 dark:bg-deco-navy-500/70 backdrop-saturate-150 overflow-hidden border-l border-white/40 dark:border-deco-gold/30 transition-all duration-300 shadow-xl dark:shadow-2xl">
       {/* Chat Header */}
-      <div className="px-6 py-4 bg-gradient-to-r from-nouveau-lavender/80 via-nouveau-rose/70 to-nouveau-mint/80 dark:from-deco-navy dark:via-deco-burgundy dark:to-deco-emerald-500 text-gray-800 dark:text-nouveau-cream relative">
-        {/* Decorative top border */}
-        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-nouveau-rose-400 via-nouveau-lavender-400 to-nouveau-sage-400 dark:from-deco-gold dark:via-deco-emerald dark:to-deco-gold" />
+      <div className="px-6 py-4 backdrop-blur-lg bg-gradient-to-r from-nouveau-lavender-300/60 via-nouveau-rose-300/50 to-nouveau-mint-300/60 dark:from-deco-navy-400/80 dark:via-deco-burgundy-400/70 dark:to-deco-emerald-500/80 text-gray-800 dark:text-nouveau-cream relative border-b border-white/40 dark:border-deco-gold/20">
+        {/* Decorative top border - Glass edge */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-nouveau-rose-400/70 via-nouveau-lavender-400/70 to-nouveau-sage-400/70 dark:from-deco-gold/60 dark:via-deco-emerald/60 dark:to-deco-gold/60" />
 
         <div className="flex items-center justify-between">
           <div>
@@ -81,7 +81,7 @@ export const ChatPanel = () => {
       {/* Chat Messages Area */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-nouveau-cream-100 via-nouveau-lavender/15 to-nouveau-rose/10 dark:bg-deco-navy/60 nouveau-scrollbar deco-scrollbar"
+        className="flex-1 overflow-y-auto p-4 space-y-4 backdrop-blur-sm bg-gradient-to-b from-transparent via-white/5 to-white/10 dark:from-transparent dark:via-black/10 dark:to-black/20 nouveau-scrollbar deco-scrollbar"
       >
         {messages.length === 0 && (
           <div className="flex items-center justify-center h-full">
@@ -102,7 +102,7 @@ export const ChatPanel = () => {
       </div>
 
       {/* Chat Input */}
-      <div className="border-t-4 border-nouveau-lavender/50 dark:border-deco-gold/30 bg-nouveau-cream-50 dark:bg-deco-navy-400">
+      <div className="border-t border-white/40 dark:border-deco-gold/20 backdrop-blur-md bg-amber/60 dark:bg-deco-navy-400/60">
         <ChatInput
           onSendMessage={handleSendMessage}
           placeholder={

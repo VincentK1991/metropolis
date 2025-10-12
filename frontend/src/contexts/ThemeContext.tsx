@@ -20,12 +20,12 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     if (stored === 'light' || stored === 'dark') {
       return stored
     }
-    
+
     // Otherwise check system preference
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       return 'dark'
     }
-    
+
     return 'light'
   })
 
@@ -37,7 +37,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     } else {
       root.classList.remove('dark')
     }
-    
+
     // Persist to localStorage
     localStorage.setItem('theme', theme)
   }, [theme])

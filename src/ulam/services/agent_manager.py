@@ -146,15 +146,15 @@ class AgentManager:
                 # Extract usage information
                 if hasattr(message, "total_cost_usd"):
                     cost_usd = message.total_cost_usd  # type: ignore
-                if hasattr(message, "input_tokens"):
-                    input_tokens = message.input_tokens  # type: ignore
-                if hasattr(message, "output_tokens"):
-                    output_tokens = message.output_tokens  # type: ignore
+                if hasattr(message, "usage"):
+                    input_tokens = message.usage["input_tokens"]  # type: ignore
+                if hasattr(message, "usage"):
+                    output_tokens = message.usage["output_tokens"]  # type: ignore
 
-                print(
-                    f"Usage: cost=${cost_usd}, "
-                    f"input={input_tokens}, output={output_tokens}"
-                )
+                # print(
+                #     f"Usage: cost=${cost_usd}, "
+                #     f"input={input_tokens}, output={output_tokens}"
+                # )
 
             # Process and yield chunks to frontend
             json_messages = handler.process_message(message)

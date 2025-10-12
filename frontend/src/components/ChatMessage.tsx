@@ -19,7 +19,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
     return (
       <div className="flex justify-end">
         <div className="max-w-[70%]">
-          <div className="rounded-2xl dark:rounded-lg px-4 py-3 bg-gradient-to-br from-nouveau-lavender-300 to-nouveau-rose-300 dark:from-deco-emerald dark:to-deco-gold text-gray-900 dark:text-white shadow-lg dark:shadow-lg border-3 border-nouveau-lavender-400 dark:border-deco-gold/50 transition-all duration-300">
+          <div className="rounded-2xl dark:rounded-lg px-4 py-3 glass-message-user text-gray-900 dark:text-white transition-all duration-300">
             <div className="text-sm font-semibold mb-1 text-gray-700 dark:text-gray-200">You</div>
             <div className="text-base whitespace-pre-wrap break-words">
               {textContent?.content || ''}
@@ -37,7 +37,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
   return (
     <div className="flex justify-start">
       <div className="max-w-[85%]">
-        <div className="rounded-2xl dark:rounded-lg px-4 py-3 bg-nouveau-cream-50 dark:bg-deco-navy-400 border-3 border-nouveau-sage-300 dark:border-deco-silver/40 shadow-md dark:shadow-md transition-all duration-300">
+        <div className="rounded-2xl dark:rounded-lg px-4 py-3 glass-message-assistant transition-all duration-300">
           <div className="text-sm font-semibold mb-2 text-nouveau-sage-500 dark:text-deco-gold">Assistant</div>
 
           {/* Render each content block */}
@@ -145,7 +145,7 @@ const ToolUseBlock = ({ content }: { content: ToolUseContent }) => {
       <div className="my-2">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center gap-2 px-3 py-2 bg-nouveau-lavender/30 hover:bg-nouveau-lavender/50 dark:bg-deco-burgundy/30 dark:hover:bg-deco-burgundy/50 text-nouveau-lavender-500 dark:text-deco-gold rounded-lg text-sm font-medium transition-colors border border-nouveau-lavender/40 dark:border-deco-gold/40"
+          className="flex items-center gap-2 px-3 py-2 backdrop-blur-sm bg-nouveau-lavender/40 hover:bg-nouveau-lavender/60 dark:bg-deco-burgundy/40 dark:hover:bg-deco-burgundy/60 text-nouveau-lavender-500 dark:text-deco-gold rounded-lg text-sm font-medium transition-all border border-white/50 dark:border-deco-gold/30 shadow-md"
         >
           <span>🔧</span>
           <span>{content.toolName}</span>
@@ -161,16 +161,16 @@ const ToolUseBlock = ({ content }: { content: ToolUseContent }) => {
     <div className="my-2">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center gap-2 px-3 py-2 bg-nouveau-lavender/30 hover:bg-nouveau-lavender/50 dark:bg-deco-burgundy/30 dark:hover:bg-deco-burgundy/50 text-nouveau-lavender-500 dark:text-deco-gold rounded-lg text-sm font-medium transition-colors border border-nouveau-lavender/40 dark:border-deco-gold/40"
+        className="flex items-center gap-2 px-3 py-2 backdrop-blur-sm bg-nouveau-lavender/40 hover:bg-nouveau-lavender/60 dark:bg-deco-burgundy/40 dark:hover:bg-deco-burgundy/60 text-nouveau-lavender-500 dark:text-deco-gold rounded-lg text-sm font-medium transition-all border border-white/50 dark:border-deco-gold/30 shadow-md"
       >
         <span>🔧</span>
         <span>{content.toolName}</span>
         <span className="ml-1">{isExpanded ? '▼' : '▶'}</span>
       </button>
       {isExpanded && (
-        <div className="mt-2 p-3 bg-nouveau-cream/80 dark:bg-deco-navy/50 rounded-lg border border-nouveau-sage/30 dark:border-deco-silver/30">
-          <div className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1">Input:</div>
-          <pre className="text-sm text-gray-700 dark:text-gray-300 overflow-x-auto whitespace-pre-wrap break-words">
+        <div className="mt-2 p-3 backdrop-blur-md bg-amber/60 dark:bg-deco-navy/60 rounded-lg border border-white/40 dark:border-deco-gold/20 shadow-lg">
+          <div className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-1">Input:</div>
+          <pre className="text-sm text-gray-700 dark:text-gray-200 overflow-x-auto whitespace-pre-wrap break-words">
             {JSON.stringify(content.toolInput, null, 2)}
           </pre>
         </div>
@@ -186,15 +186,15 @@ const ToolResultBlock = ({ content }: { content: string }) => {
     <div className="my-2">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center gap-2 px-3 py-2 bg-nouveau-mint/30 hover:bg-nouveau-mint/50 dark:bg-deco-emerald/30 dark:hover:bg-deco-emerald/50 text-nouveau-sage-500 dark:text-deco-emerald rounded-lg text-sm font-medium transition-colors border border-nouveau-mint/40 dark:border-deco-emerald/40"
+        className="flex items-center gap-2 px-3 py-2 backdrop-blur-sm bg-nouveau-mint/40 hover:bg-nouveau-mint/60 dark:bg-deco-emerald/40 dark:hover:bg-deco-emerald/60 text-nouveau-sage-500 dark:text-deco-emerald rounded-lg text-sm font-medium transition-all border border-white/50 dark:border-deco-gold/30 shadow-md"
       >
         <span>📊</span>
         <span>Tool Result</span>
         <span className="ml-1">{isExpanded ? '▼' : '▶'}</span>
       </button>
       {isExpanded && (
-        <div className="mt-2 p-3 bg-nouveau-cream/80 dark:bg-deco-navy/50 rounded-lg border border-nouveau-sage/30 dark:border-deco-silver/30">
-          <pre className="text-sm text-gray-700 dark:text-gray-300 overflow-x-auto whitespace-pre-wrap break-words">
+        <div className="mt-2 p-3 backdrop-blur-md bg-amber/60 dark:bg-deco-navy/60 rounded-lg border border-white/40 dark:border-deco-gold/20 shadow-lg">
+          <pre className="text-sm text-gray-700 dark:text-gray-200 overflow-x-auto whitespace-pre-wrap break-words">
             {content}
           </pre>
         </div>

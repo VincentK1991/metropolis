@@ -97,7 +97,7 @@ export const TodoTable = ({ todos }: TodoTableProps) => {
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-amber divide-y divide-gray-200">
             {todos.map((todo, index) => (
               <tr key={index} className="hover:bg-gray-50 transition-colors">
                 <td className="px-3 py-3 whitespace-nowrap text-sm text-gray-600">

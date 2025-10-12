@@ -121,6 +121,21 @@ module.exports = {
         'nouveau-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0c8.284 0 15 6.716 15 15 0 8.284-6.716 15-15 15-8.284 0-15-6.716-15-15C15 6.716 21.716 0 30 0zm0 3c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12S36.627 3 30 3z' fill='%23e1d7ef' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E\")",
         'deco-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30L0 30 30 0zm0 6.708L6.708 30 30 53.292 53.292 30 30 6.708z' fill='%23d4a037' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E\")",
       },
+      backdropBlur: {
+        xs: '2px',
+        sm: '4px',
+        md: '8px',
+        lg: '12px',
+        xl: '16px',
+        '2xl': '20px',
+        '3xl': '24px',
+      },
+      backdropSaturate: {
+        120: '1.2',
+        150: '1.5',
+        180: '1.8',
+        200: '2',
+      },
     },
   },
   plugins: [
