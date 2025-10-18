@@ -18,7 +18,7 @@ install dependencies (require uv)
 
 ## Features & Capabilities
 
-1. talk to Claude agent (using claude code as backend)
+1. talk to Claude agent (using claude code as backend) connected via websocket
 2. tool use & code execution
 3. persistent sessions
 4. skill storage and skill useage in workflow AI
