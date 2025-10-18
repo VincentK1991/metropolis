@@ -7,12 +7,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from metropolis.config.settings import db_config
 from metropolis.db.session_store import SessionStore
 from metropolis.db.skill_store import SkillStore
+from metropolis.db.workflow_store import WorkflowStore
 from metropolis.hooks import validate_deck_on_write
 from metropolis.routes.agent_routes import router as agent_router
 from metropolis.routes.session_routes import init_session_store
 from metropolis.routes.session_routes import router as session_router
 from metropolis.routes.skill_routes import init_skill_store
 from metropolis.routes.skill_routes import router as skill_router
+from metropolis.routes.workflow_routes import init_workflow_store
+from metropolis.routes.workflow_routes import router as workflow_router
 from metropolis.services.agent_manager import init_agent_manager
 from metropolis.services.jsonl_handler import JSONLHandler
 from metropolis.tools.skill_tool import skill_server
@@ -45,6 +48,23 @@ async def lifespan(app: FastAPI):
     # Initialize skill store singleton
     init_skill_store(skill_store)
 
+    # Initialize MongoDB workflow store
+    workflow_store = WorkflowStore(
+        mongodb_uri=db_config.uri, database_name=db_config.database
+    )
+    await workflow_store.create_indexes()
+    print("MongoDB workflow store initialized")
+
+    # Initialize workflow store singleton
+    init_workflow_store(workflow_store)
+
+    # Initialize skill store for workflow routes as well
+    from metropolis.routes.workflow_routes import (
+        init_skill_store as init_workflow_skill_store,
+    )
+
+    init_workflow_skill_store(skill_store)
+
     # Initialize JSONL handler
     jsonl_handler = JSONLHandler()
     print("JSONL handler initialized")
@@ -70,6 +90,7 @@ async def lifespan(app: FastAPI):
     print("Shutting down Metropolis Agent API...")
     await session_store.close()
     await skill_store.close()
+    await workflow_store.close()
     print("MongoDB connection closed")
 
 
@@ -101,6 +122,7 @@ app.add_middleware(
 app.include_router(agent_router, tags=["agent"])
 app.include_router(session_router)
 app.include_router(skill_router)
+app.include_router(workflow_router)
 
 
 @app.get("/")
@@ -112,6 +134,8 @@ async def root():
         "websocket": "/ws/agent",
         "sessions_api": "/api/sessions",
         "skills_api": "/api/skills",
+        "workflows_api": "/api/workflows",
+        "workflow_runs_api": "/api/workflow-runs",
     }
 
 

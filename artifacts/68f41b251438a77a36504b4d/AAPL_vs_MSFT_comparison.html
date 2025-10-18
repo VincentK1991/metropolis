@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>AAPL vs MSFT Stock Comparison</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .info {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        canvas {
+            max-height: 350px;
+        }
+    </style>
+</head>
+<body>
+    <h1>AAPL vs MSFT - Comprehensive Analysis (1 Year)</h1>
+    <div class="info">AAPL: PE=38.34, Forward PE=30.36, P/B=56.94 | MSFT: PE=37.6, Forward PE=34.35, P/B=11.12</div>
+    <div class="grid">
+        <div class="chart-container">
+            <canvas id="chart1"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="volumeChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="volatilityChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="performanceChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const dates = ["2024-10-18", "2024-10-25", "2024-11-01", "2024-11-08", "2024-11-15", "2024-11-22", "2024-12-02", "2024-12-09", "2024-12-16", "2024-12-23", "2024-12-31", "2025-01-08", "2025-01-16", "2025-01-24", "2025-01-31", "2025-02-07", "2025-02-14", "2025-02-24", "2025-03-03", "2025-03-10", "2025-03-17", "2025-03-24", "2025-03-31", "2025-04-07", "2025-04-14", "2025-04-22", "2025-04-29", "2025-05-06", "2025-05-13", "2025-05-20", "2025-05-28", "2025-06-04", "2025-06-11", "2025-06-18", "2025-06-26", "2025-07-03", "2025-07-11", "2025-07-18", "2025-07-25", "2025-08-01", "2025-08-08", "2025-08-15", "2025-08-22", "2025-08-29", "2025-09-08", "2025-09-15", "2025-09-22", "2025-09-29", "2025-10-06", "2025-10-13"];
+        const stock1Data = [36.21, 35.66, 34.35, 35.01, 34.71, 35.46, 36.96, 38.07, 38.73, 39.38, 38.63, 37.44, 35.21, 34.37, 36.41, 35.12, 37.78, 38.16, 36.76, 35.13, 33.05, 34.09, 34.31, 28.02, 31.28, 30.85, 32.62, 30.66, 32.93, 31.99, 30.99, 31.36, 30.74, 30.4, 31.08, 33.02, 32.65, 32.66, 33.08, 31.3, 35.47, 35.85, 35.26, 35.94, 36.83, 36.65, 39.65, 39.39, 39.74, 38.34];
+        const stock2Data = [30.36, 31.08, 29.79, 30.67, 30.13, 30.33, 31.35, 32.44, 32.85, 31.66, 30.66, 30.88, 30.88, 32.3, 30.19, 29.81, 29.71, 29.45, 28.32, 27.71, 28.33, 28.65, 27.36, 26.08, 28.27, 26.74, 28.72, 31.58, 32.74, 33.46, 33.4, 33.87, 34.51, 35.07, 36.32, 36.42, 36.75, 37.24, 37.51, 38.27, 38.12, 37.98, 37.1, 37.06, 36.44, 37.69, 37.63, 37.64, 38.66, 37.6];
+        const stock1Volumes = [46431500, 38802300, 65276700, 38328800, 47923700, 38168300, 48137100, 44649200, 51694800, 40858800, 39480700, 37628900, 71759100, 54697900, 100959800, 39707200, 40896200, 51326400, 47184000, 72071200, 48073400, 44299500, 65299300, 160466300, 101352900, 52976400, 36827600, 51216500, 51909300, 42496600, 45339700, 43604000, 60989900, 45394700, 50799100, 34955800, 39765800, 48974600, 40268800, 104434500, 113854000, 56038700, 42477800, 39418400, 48999500, 42699500, 105517400, 40127700, 44664100, 38142900];
+        const stock2Volumes = [17145300, 16899100, 24230400, 16891400, 28247600, 24814600, 20207200, 19144400, 23598800, 19152500, 13246500, 15054600, 15300000, 15549500, 34161900, 22886800, 22758500, 26443700, 23007700, 32840100, 22474300, 21004500, 35184700, 50425000, 19251200, 19485000, 14974000, 15104200, 23618800, 15441800, 17086300, 14162700, 16399200, 17526500, 21578900, 13984800, 16459500, 21209700, 19125700, 28977600, 15531000, 25213300, 24324200, 20961600, 16771000, 17143800, 20009300, 17617800, 21388600, 14284200];
+        const stock1Range = [2.16, 3.63, 5.06, 2.24, 2.64, 2.65, 3.62, 5.47, 3.72, 2.19, 3.84, 3.65, 9.94, 4.21, 13.7, 6.72, 4.55, 4.43, 7.9, 11.91, 5.24, 2.89, 9.37, 19.48, 11.75, 5.61, 3.86, 3.62, 4.4, 3.44, 2.83, 4.14, 6.08, 2.5, 3.18, 2.84, 2.27, 2.09, 1.84, 12.07, 11.74, 4.94, 3.68, 2.01, 3.81, 3.16, 8.52, 1.99, 4.02, 4.13];
+        const stock2Range = [3.36, 5.91, 7.94, 4.68, 9.09, 6.31, 11.63, 7.79, 6.86, 4.79, 6.04, 5.4, 5.07, 5.22, 5.75, 10.49, 3.01, 10.02, 12.62, 9.15, 7.12, 5.57, 9.8, 26.12, 10.4, 7.88, 4.7, 6.54, 5.29, 4.01, 5.58, 2.67, 5.8, 6.53, 5.22, 6.68, 7.22, 7.2, 7.92, 14.92, 5.24, 7.01, 8.32, 5.11, 6.17, 8.47, 5.2, 7.97, 12.83, 4.73];
+        const stock1Normalized = [0.0, -1.53, -5.14, -3.31, -4.15, -2.07, 2.06, 5.12, 6.94, 8.75, 6.68, 3.39, -2.76, -5.1, 0.54, -3.03, 4.31, 5.38, 1.51, -2.99, -8.73, -5.87, -5.27, -22.61, -13.63, -14.82, -9.93, -15.34, -9.07, -11.66, -14.42, -13.39, -15.12, -16.05, -14.17, -8.81, -9.83, -9.82, -8.67, -13.58, -2.06, -0.99, -2.63, -0.76, 1.7, 1.19, 9.48, 8.77, 9.74, 5.88];
+        const stock2Normalized = [0.0, 2.39, -1.86, 1.05, -0.75, -0.08, 3.27, 6.88, 8.21, 4.3, 1.0, 1.73, 1.74, 6.41, -0.54, -1.81, -2.13, -3.0, -6.72, -8.72, -6.67, -5.62, -9.87, -14.08, -6.89, -11.92, -5.39, 4.04, 7.84, 10.21, 10.02, 11.58, 13.69, 15.52, 19.66, 19.99, 21.07, 22.69, 23.57, 26.07, 25.57, 25.13, 22.21, 22.08, 20.04, 24.17, 23.95, 23.99, 27.35, 23.86];
+
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                x: {
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45,
+                        maxTicksLimit: 10
+                    }
+                }
+            }
+        };
+
+        // Chart 1: P/E Ratio or Price Comparison
+        new Chart(document.getElementById('chart1'), {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'AAPL',
+                    data: stock1Data,
+                    borderColor: '#76b900',
+                    backgroundColor: 'rgba(118, 185, 0, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.1
+                }, {
+                    label: 'MSFT',
+                    data: stock2Data,
+                    borderColor: '#ed1c24',
+                    backgroundColor: 'rgba(237, 28, 36, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'P/E Ratio Comparison',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Volume Comparison
+        new Chart(document.getElementById('volumeChart'), {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'AAPL',
+                    data: stock1Volumes,
+                    backgroundColor: 'rgba(118, 185, 0, 0.7)',
+                    borderColor: '#76b900',
+                    borderWidth: 1
+                }, {
+                    label: 'MSFT',
+                    data: stock2Volumes,
+                    backgroundColor: 'rgba(237, 28, 36, 0.7)',
+                    borderColor: '#ed1c24',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Trading Volume Comparison',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+
+        // Chart 3: Daily Price Range (Volatility)
+        new Chart(document.getElementById('volatilityChart'), {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'AAPL',
+                    data: stock1Range,
+                    borderColor: '#76b900',
+                    backgroundColor: 'rgba(118, 185, 0, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: true
+                }, {
+                    label: 'MSFT',
+                    data: stock2Range,
+                    borderColor: '#ed1c24',
+                    backgroundColor: 'rgba(237, 28, 36, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Daily Price Range (High - Low) - Volatility ($)',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    ...commonOptions.scales,
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Chart 4: Normalized Performance
+        new Chart(document.getElementById('performanceChart'), {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'AAPL',
+                    data: stock1Normalized,
+                    borderColor: '#76b900',
+                    backgroundColor: 'rgba(118, 185, 0, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.1
+                }, {
+                    label: 'MSFT',
+                    data: stock2Normalized,
+                    borderColor: '#ed1c24',
+                    backgroundColor: 'rgba(237, 28, 36, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Cumulative Return (% Change from 1 Year Ago)',
+                        font: { size: 16, weight: 'bold' }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    ...commonOptions.scales,
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

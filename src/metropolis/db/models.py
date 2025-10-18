@@ -2,7 +2,7 @@
 
 from datetime import UTC, datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -111,6 +111,32 @@ class ClaudeAgentSkill(BaseModel):
     content: str = Field(..., description="Markdown content")
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
+    class Config:
+        populate_by_name = True
+
+
+class WorkflowRun(BaseModel):
+    """
+    Pydantic model for workflow run history.
+
+    Tracks execution of skills as workflows with results and artifacts.
+    """
+
+    id: Optional[str] = Field(default=None, alias="_id")
+    skill_id: str = Field(..., description="Associated skill ID")
+    user_input: str = Field(..., description="User's natural language input")
+    artifact_paths: List[str] = Field(
+        default=[], description="Paths to generated artifacts"
+    )
+    execution_log: List[dict] = Field(
+        default=[], description="Formatted execution messages"
+    )
+    status: str = Field(
+        default="running", description="Execution status: running, completed, failed"
+    )
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    completed_at: Optional[datetime] = None
 
     class Config:
         populate_by_name = True

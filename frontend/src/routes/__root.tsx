@@ -40,6 +40,15 @@ export const Route = createRootRoute({
                   >
                     Skills
                   </Link>
+                  <Link
+                    to="/workflow"
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-nouveau-cream hover:text-nouveau-lavender-500 dark:hover:text-deco-gold transition-colors"
+                    activeProps={{
+                      className: 'border-b-2 border-nouveau-lavender-400 dark:border-deco-gold',
+                    }}
+                  >
+                    Workflow
+                  </Link>
                 </div>
                 <div className="flex items-center">
                   <ThemeToggle />
