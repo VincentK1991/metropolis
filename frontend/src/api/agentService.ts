@@ -45,14 +45,19 @@ export class AgentWebSocketService {
     })
   }
 
-  sendMessage(text: string) {
+  sendMessage(text: string, sessionId?: string | null) {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       throw new Error('WebSocket is not connected')
     }
 
-    const message = {
+    const message: any = {
       type: 'query',
       content: text,
+    }
+
+    // Include session_id for subsequent queries (not first query)
+    if (sessionId) {
+      message.session_id = sessionId
     }
 
     this.ws.send(JSON.stringify(message))

@@ -8,15 +8,15 @@ from ulam.utils.partial_messages import StreamPrintHandler
 
 options = ClaudeAgentOptions(
     include_partial_messages=True,
-    model="claude-sonnet-4-5",
     max_turns=100,
     permission_mode="bypassPermissions",
+    model="claude-haiku-4-5",
     mcp_servers={"multiplication": multiplication_server},
-    # allowed_tools=["Read", "Write", "WebSearch"],
     hooks={"PostToolUse": [HookMatcher(hooks=[validate_deck_on_write])]},  # type: ignore
     env={
         "MAX_THINKING_TOKENS": "4000",
     },
+    setting_sources=["local","project"],
 )
 
 

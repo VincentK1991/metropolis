@@ -3,4 +3,8 @@ export { ChatMessage } from './ChatMessage'
 export { ChatInput } from './ChatInput'
 export { ThemeToggle } from './ThemeToggle'
 export { SessionSidebar } from './SessionSidebar'
+export { SkillsPage } from './SkillsPage'
+export { SkillCard } from './SkillCard'
+export { SkillViewModal } from './SkillViewModal'
+export { SkillEditorModal } from './SkillEditorModal'
 

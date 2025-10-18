@@ -74,8 +74,8 @@ export const useAgentChat = (): UseAgentChatResult => {
       setIsConnected(true)
       setError(null)
 
-      // Send init_session for new session
-      agentService.sendInitSession(null)
+      // Don't send init_session for new sessions
+      // The first query will create the session
     } catch (err) {
       setError('Failed to connect to agent service')
       setIsConnected(false)
@@ -137,16 +137,26 @@ export const useAgentChat = (): UseAgentChatResult => {
       }
 
       setIsStreaming(true)
-      agentService.sendMessage(text)
+      agentService.sendMessage(text, sessionId)
     } catch (err) {
       setError('Failed to send message')
       setIsStreaming(false)
     }
-  }, [isConnected])
+  }, [isConnected, sessionId])
 
   useEffect(() => {
     const unsubscribeMessage = agentService.onMessage((message: WebSocketMessage) => {
-      // Handle session_ready message
+      // Handle session_created message (new session with first query)
+      if (message.type === 'session_created') {
+        const sessionCreatedMsg = message as any
+        setSessionId(sessionCreatedMsg.session_id)
+        localStorage.setItem('lastSessionId', sessionCreatedMsg.session_id)
+        console.log('Session created with ID:', sessionCreatedMsg.session_id)
+        loadAvailableSessions()
+        return
+      }
+
+      // Handle session_ready message (resumed session)
       if (message.type === 'session_ready') {
         const sessionReadyMsg = message as any
         setSessionId(sessionReadyMsg.claude_session_id)
@@ -265,15 +275,17 @@ export const useAgentChat = (): UseAgentChatResult => {
           setIsConnected(true)
           setError(null)
 
+          // Always load available sessions on initial connection
+          await loadAvailableSessions()
+
           // Check for existing session and initialize
           const lastSessionId = localStorage.getItem('lastSessionId')
           if (lastSessionId) {
             // Resume last session
             agentService.sendInitSession(lastSessionId)
-          } else {
-            // Start new session
-            agentService.sendInitSession(null)
           }
+          // For new sessions, don't send init_session
+          // The first query will create the session
         }
       } catch (err) {
         if (isMounted) {
@@ -289,7 +301,7 @@ export const useAgentChat = (): UseAgentChatResult => {
       isMounted = false
       agentService.disconnect()
     }
-  }, []) // Only run once on mount
+  }, [loadAvailableSessions]) // Include loadAvailableSessions in deps
 
   return {
     messages,

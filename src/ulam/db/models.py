@@ -79,3 +79,38 @@ class ClaudeAgentMessage(BaseModel):
 
     class Config:
         populate_by_name = True
+
+
+class ClaudeAgentJSONLLine(BaseModel):
+    """
+    Represents a single line from a Claude Agent SDK JSONL session file.
+
+    Minimal model to store JSONL conversation history for session resumption
+    across multiple pods. Each line is stored as-is from the .jsonl file.
+    """
+
+    id: Optional[str] = Field(default=None, alias="_id")
+    session_id: str = Field(..., description="References claude_session_id")
+    line_number: int = Field(..., description="Sequential line number (0-indexed)")
+    line: str = Field(..., description="Raw JSONL line string")
+
+    class Config:
+        populate_by_name = True
+
+
+class ClaudeAgentSkill(BaseModel):
+    """
+    Represents a markdown skill for AI agents.
+
+    Skills are markdown documents that represent capabilities
+    or knowledge that can be given to AI agents.
+    """
+
+    id: Optional[str] = Field(default=None, alias="_id")
+    title: str = Field(..., description="Skill title")
+    content: str = Field(..., description="Markdown content")
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
+    class Config:
+        populate_by_name = True

@@ -27,6 +27,7 @@ class SessionStore:
         self.db = self.client[database_name]
         self.sessions = self.db["claude_agent_sdk_sessions"]
         self.messages = self.db["claude_agent_sdk_messages"]
+        self.jsonl_lines = self.db["claude_agent_sdk_jsonl_lines"]
 
     async def create_indexes(self):
         """Create indexes on startup for optimal query performance."""
@@ -42,6 +43,11 @@ class SessionStore:
         )
         await self.messages.create_index(
             [("session_id", ASCENDING), ("created_at", ASCENDING)]
+        )
+
+        # JSONL line indexes
+        await self.jsonl_lines.create_index(
+            [("session_id", ASCENDING), ("line_number", ASCENDING)], unique=True
         )
 
     async def create_session(self, session: ClaudeAgentSession) -> ClaudeAgentSession:
@@ -124,7 +130,7 @@ class SessionStore:
 
     async def delete_session(self, claude_session_id: str) -> bool:
         """
-        Delete a session and all its messages.
+        Delete a session and all its messages and JSONL lines.
 
         Args:
             claude_session_id: The Claude session ID
@@ -134,6 +140,9 @@ class SessionStore:
         """
         # Delete all messages first
         await self.messages.delete_many({"session_id": claude_session_id})
+
+        # Delete all JSONL lines
+        await self.delete_jsonl_lines(claude_session_id)
 
         # Delete the session
         result = await self.sessions.delete_one(
@@ -234,6 +243,65 @@ class SessionStore:
                 "$set": {"total_cost_usd": cost_usd, "updated_at": datetime.now(UTC)},
             },
         )
+
+    async def save_jsonl_lines(self, session_id: str, lines: list[str]):
+        """
+        Save JSONL lines for a session.
+
+        Deletes existing lines for the session and inserts new ones.
+
+        Args:
+            session_id: The Claude session ID
+            lines: List of raw JSONL line strings
+        """
+        # Delete existing lines for this session
+        await self.jsonl_lines.delete_many({"session_id": session_id})
+
+        # If no lines to save, we're done
+        if not lines:
+            return
+
+        # Prepare documents with line numbers
+        documents = [
+            {
+                "session_id": session_id,
+                "line_number": i,
+                "line": line,
+            }
+            for i, line in enumerate(lines)
+        ]
+
+        # Bulk insert
+        await self.jsonl_lines.insert_many(documents)
+
+    async def get_jsonl_lines(self, session_id: str) -> list[str]:
+        """
+        Get all JSONL lines for a session in order.
+
+        Args:
+            session_id: The Claude session ID
+
+        Returns:
+            List of raw JSONL line strings sorted by line_number
+        """
+        cursor = self.jsonl_lines.find({"session_id": session_id}).sort(
+            "line_number", ASCENDING
+        )
+
+        lines = []
+        async for doc in cursor:
+            lines.append(doc["line"])
+
+        return lines
+
+    async def delete_jsonl_lines(self, session_id: str):
+        """
+        Delete all JSONL lines for a session.
+
+        Args:
+            session_id: The Claude session ID
+        """
+        await self.jsonl_lines.delete_many({"session_id": session_id})
 
     async def close(self):
         """Close the MongoDB connection."""

@@ -16,7 +16,7 @@ class AgentService:
         self.client: ClaudeSDKClient | None = None
         self.options = ClaudeAgentOptions(
             include_partial_messages=True,
-            model="claude-sonnet-4-5",
+            model="claude-haiku-4-5",
             max_turns=100,
             permission_mode="bypassPermissions",
             mcp_servers={"multiplication": multiplication_server},

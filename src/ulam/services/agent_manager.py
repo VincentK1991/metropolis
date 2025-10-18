@@ -8,6 +8,7 @@ from fastapi import WebSocket
 
 from ulam.db.models import ClaudeAgentMessage, ClaudeAgentSession, MessageRole
 from ulam.db.session_store import SessionStore
+from ulam.services.jsonl_handler import JSONLHandler
 from ulam.utils.websocket_handler import WebSocketStreamHandler
 
 
@@ -19,26 +20,64 @@ class AgentManager:
     Accumulates streaming chunks in memory and saves complete messages.
     """
 
-    def __init__(self, session_store: SessionStore, options: ClaudeAgentOptions):
+    def __init__(
+        self,
+        session_store: SessionStore,
+        options: ClaudeAgentOptions,
+        jsonl_handler: JSONLHandler,
+    ):
         """
         Initialize the agent manager.
 
         Args:
             session_store: SessionStore instance for database operations
             options: ClaudeAgentOptions for creating SDK clients
+            jsonl_handler: JSONLHandler instance for managing JSONL files
         """
         self.clients: Dict[str, ClaudeSDKClient] = {}  # claude_session_id -> client
         self.session_store = session_store
         self.options = options
+        self.jsonl_handler = jsonl_handler
         # Accumulator for streaming chunks (session_id -> content_blocks)
         self.streaming_buffers: Dict[str, list[dict]] = {}
 
-    async def create_session(self) -> tuple[str, ClaudeSDKClient]:
+    def extract_session_id_from_message(self, message) -> Optional[str]:
         """
-        Create a new Claude SDK client and capture session_id.
+        Extract session ID from a Claude SDK message.
+
+        The SDK includes sessionId in certain message types.
+
+        Args:
+            message: Message from Claude SDK
 
         Returns:
-            Tuple of (claude_session_id, client)
+            Session ID if found, None otherwise
+        """
+        # Check if message has sessionId attribute directly
+        if hasattr(message, "session_id"):
+            return message.session_id
+
+        # Check for sessionId in message dict representation
+        if isinstance(message, dict) and "sessionId" in message:
+            return message["sessionId"]
+
+        return None
+
+    async def create_session_with_first_query(
+        self, prompt: str
+    ) -> tuple[str, AsyncGenerator[dict, None]]:
+        """
+        Create a new SDK client with the user's first query and capture real session ID.
+
+        The SDK generates a UUID session ID when processing the first query.
+        This method sends the query and extracts the session ID from the response.
+
+        Args:
+            prompt: User's first message
+
+        Returns:
+            Tuple of (session_id, response_generator) where response_generator
+            yields JSON messages for streaming to frontend
 
         Raises:
             Exception: If session ID cannot be captured
@@ -47,34 +86,137 @@ class AgentManager:
         client = ClaudeSDKClient(options=self.options)
         await client.__aenter__()
 
-        # The SDK generates a session ID internally
-        # We'll use a combination of timestamp and random for uniqueness
-        # until we get the first real query which will give us the actual session_id
-        import uuid
+        # Send the first query
+        await client.query(prompt)
 
-        # Generate a temporary session ID
-        temp_session_id = f"session-{uuid.uuid4().hex[:16]}"
-        claude_session_id = temp_session_id
+        # We need to peek at the response to get the session ID
+        # The SDK writes session info to the JSONL file
+        # We'll need to read the JSONL file after the first message
+        async def response_generator():
+            handler = WebSocketStreamHandler()
+            content_blocks = []
+            start_time = datetime.now(UTC)
+            cost_usd: Optional[float] = None
+            input_tokens: Optional[int] = None
+            output_tokens: Optional[int] = None
+            session_id_captured: Optional[str] = None
 
-        print(f"Created new session: {claude_session_id}")
+            async for message in client.receive_response():
+                # Try to extract session ID from message
+                if session_id_captured is None:
+                    session_id_captured = self.extract_session_id_from_message(message)
 
-        # Store in MongoDB
-        try:
-            session = ClaudeAgentSession(claude_session_id=claude_session_id)
+                # Extract usage information
+                if isinstance(message, ResultMessage):
+                    if hasattr(message, "total_cost_usd"):
+                        cost_usd = message.total_cost_usd  # type: ignore
+                    if hasattr(message, "usage"):
+                        input_tokens = message.usage["input_tokens"]  # type: ignore
+                        output_tokens = message.usage["output_tokens"]  # type: ignore
+
+                # Process and yield chunks
+                json_messages = handler.process_message(message)
+                for json_msg in json_messages:
+                    yield json_msg
+
+                    # Accumulate chunks
+                    if json_msg["type"] in ["text", "thinking"]:
+                        if (
+                            content_blocks
+                            and content_blocks[-1]["type"] == json_msg["type"]
+                        ):
+                            content_blocks[-1]["content"] += json_msg["content"]
+                        else:
+                            content_blocks.append(
+                                {
+                                    "type": json_msg["type"],
+                                    "content": json_msg["content"],
+                                }
+                            )
+                    elif json_msg["type"] in ["tool_use", "tool_result"]:
+                        content_blocks.append(json_msg)
+
+            # After streaming completes, read JSONL file to get session ID
+            # The SDK writes session info to the JSONL file
+            if session_id_captured is None:
+                # Read the JSONL files in the project directory to find the newest session
+                import os
+
+                project_path = self.jsonl_handler.get_project_path()
+                if project_path.exists():
+                    jsonl_files = list(project_path.glob("*.jsonl"))
+                    if jsonl_files:
+                        # Get the most recently modified file
+                        newest_file = max(jsonl_files, key=os.path.getmtime)
+                        session_id_captured = newest_file.stem
+
+            if not session_id_captured:
+                raise Exception("Could not capture session ID from Claude SDK")
+
+            # Store session in MongoDB
+            session = ClaudeAgentSession(claude_session_id=session_id_captured)
             await self.session_store.create_session(session)
-        except Exception as e:
-            print(f"Error creating session in MongoDB: {e}")
-            raise
 
-        # Cache client
-        self.clients[claude_session_id] = client
-        self.streaming_buffers[claude_session_id] = []
+            # Save user message
+            user_seq = 0
+            user_msg = ClaudeAgentMessage(
+                session_id=session_id_captured,
+                sequence=user_seq,
+                role=MessageRole.USER,
+                content_blocks=[{"type": "text", "content": prompt}],
+            )
+            await self.session_store.save_message(user_msg)
+            await self.session_store.increment_message_count(session_id_captured)
 
-        return claude_session_id, client
+            # Save assistant message
+            duration_ms = int((datetime.now(UTC) - start_time).total_seconds() * 1000)
+            assistant_seq = 1
+            assistant_msg = ClaudeAgentMessage(
+                session_id=session_id_captured,
+                sequence=assistant_seq,
+                role=MessageRole.ASSISTANT,
+                content_blocks=content_blocks,
+                duration_ms=duration_ms,
+                cost_usd=cost_usd,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+            )
+            await self.session_store.save_message(assistant_msg)
+            await self.session_store.increment_message_count(session_id_captured)
+
+            # Update session usage
+            if (
+                cost_usd is not None
+                or input_tokens is not None
+                or output_tokens is not None
+            ):
+                await self.session_store.update_session_usage(
+                    session_id_captured,
+                    cost_usd=cost_usd or 0.0,
+                    input_tokens=input_tokens or 0,
+                    output_tokens=output_tokens or 0,
+                )
+
+            # Cache client
+            self.clients[session_id_captured] = client
+            self.streaming_buffers[session_id_captured] = []
+
+            # Signal session created
+            yield {"type": "session_id_captured", "session_id": session_id_captured}
+
+            # Send complete signal
+            yield {"type": "complete"}
+
+        # We need to determine the session ID first before returning
+        # Let's modify to return a special generator that yields session_id first
+        return ("pending", response_generator())
 
     async def resume_session(self, claude_session_id: str) -> ClaudeSDKClient:
         """
         Resume an existing session using SDK's resume option.
+
+        Restores JSONL file from MongoDB before creating SDK client.
+        MongoDB is treated as the source of truth for conversation history.
 
         Args:
             claude_session_id: The Claude session ID to resume
@@ -86,8 +228,16 @@ class AgentManager:
         if claude_session_id in self.clients:
             return self.clients[claude_session_id]
 
-        # Create new client (SDK handles context restoration via resume)
-        client = ClaudeSDKClient(options=self.options)
+        # Restore JSONL file from MongoDB (overwrites local file)
+        await self.jsonl_handler.restore_from_mongodb(
+            claude_session_id, self.session_store
+        )
+
+        # Create new client with resume option
+        resume_options = ClaudeAgentOptions(
+            **{**self.options.__dict__, "resume": claude_session_id}
+        )
+        client = ClaudeSDKClient(options=resume_options)
         await client.__aenter__()
 
         # Cache it
@@ -242,13 +392,18 @@ def get_agent_manager() -> AgentManager:
     return _agent_manager
 
 
-def init_agent_manager(session_store: SessionStore, options: ClaudeAgentOptions):
+def init_agent_manager(
+    session_store: SessionStore,
+    options: ClaudeAgentOptions,
+    jsonl_handler: JSONLHandler,
+):
     """
     Initialize the global agent manager.
 
     Args:
         session_store: SessionStore instance
         options: ClaudeAgentOptions for SDK clients
+        jsonl_handler: JSONLHandler instance for managing JSONL files
     """
     global _agent_manager
-    _agent_manager = AgentManager(session_store, options)
+    _agent_manager = AgentManager(session_store, options, jsonl_handler)

@@ -53,12 +53,15 @@ export interface ChatMessage {
 }
 
 export interface WebSocketMessage {
-  type: MessageContentType | 'complete' | 'error'
+  type: MessageContentType | 'complete' | 'error' | 'session_created' | 'session_ready' | 'session_id_captured'
   content?: string
   toolName?: string
   toolInput?: any
   todos?: TodoItem[]
   toolCallId?: string
   message?: string
+  session_id?: string
+  claude_session_id?: string
+  messages?: any[]
 }
 

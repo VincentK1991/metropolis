@@ -18,8 +18,6 @@ This guide demonstrates how to perform template replacement in PowerPoint presen
 ## Installation
 
 ```bash
-pip install python-pptx
-# or with uv
 uv add python-pptx
 ```
 
