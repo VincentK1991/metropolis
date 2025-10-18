@@ -24,9 +24,9 @@ export function WorkflowPage() {
             Select a workflow to execute
           </p>
         </div>
-        
+
         <div className="h-[calc(100%-5rem)] overflow-hidden">
-          <WorkflowList 
+          <WorkflowList
             selectedWorkflow={selectedWorkflow}
             onSelectWorkflow={setSelectedWorkflow}
           />

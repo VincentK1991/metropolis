@@ -77,11 +77,11 @@ export function WorkflowRunHistory() {
           >
             Previous
           </button>
-          
+
           <span className="text-sm text-nouveau-lavender-600 dark:text-nouveau-cream/80">
             Page {currentPage + 1}
           </span>
-          
+
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={runs.length < pageSize}
@@ -124,7 +124,7 @@ function WorkflowRunCard({ run, onViewDetails }: WorkflowRunCardProps) {
             Run ID: {run._id}
           </p>
         </div>
-        
+
         <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusColor[run.status]}`}>
           {statusIcon[run.status]} {run.status}
         </span>
@@ -139,7 +139,7 @@ function WorkflowRunCard({ run, onViewDetails }: WorkflowRunCardProps) {
             </span>
           )}
         </div>
-        
+
         {run.artifact_paths.length > 0 && (
           <span className="text-nouveau-lavender-700 dark:text-deco-gold">
             📎 {run.artifact_paths.length} artifact{run.artifact_paths.length !== 1 ? 's' : ''}
@@ -178,7 +178,7 @@ function WorkflowRunDetail({ run, onBack }: WorkflowRunDetailProps) {
             Workflow Run Details
           </h2>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <span className="font-medium text-nouveau-lavender-700 dark:text-deco-gold">Run ID:</span>
@@ -230,7 +230,7 @@ function WorkflowRunDetail({ run, onBack }: WorkflowRunDetailProps) {
         <h3 className="text-lg font-medium text-nouveau-lavender-800 dark:text-deco-gold mb-4">
           Execution Log
         </h3>
-        
+
         {run.execution_log.length === 0 ? (
           <p className="text-nouveau-lavender-600 dark:text-nouveau-cream/60">No execution log available</p>
         ) : (
@@ -263,7 +263,7 @@ function ExecutionLogEntry({ message }: ExecutionLogEntryProps) {
           <p className="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap">{message.content}</p>
         </div>
       )
-    
+
     case 'text':
       return (
         <div className="p-3 bg-white dark:bg-deco-navy/30 border border-nouveau-lavender-200 dark:border-deco-gold/20 rounded-md">
@@ -276,7 +276,7 @@ function ExecutionLogEntry({ message }: ExecutionLogEntryProps) {
           </p>
         </div>
       )
-    
+
     case 'tool_use':
       return (
         <div className="p-3 bg-purple-100 dark:bg-purple-900/30 border border-purple-300 dark:border-purple-600 rounded-md">
@@ -291,7 +291,7 @@ function ExecutionLogEntry({ message }: ExecutionLogEntryProps) {
           </pre>
         </div>
       )
-    
+
     case 'tool_result':
       return (
         <div className="p-3 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-600 rounded-md">
@@ -304,7 +304,7 @@ function ExecutionLogEntry({ message }: ExecutionLogEntryProps) {
           </p>
         </div>
       )
-    
+
     case 'error':
       return (
         <div className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-600 rounded-md">
@@ -317,7 +317,7 @@ function ExecutionLogEntry({ message }: ExecutionLogEntryProps) {
           </p>
         </div>
       )
-    
+
     default:
       return (
         <div className="p-3 bg-gray-100 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 rounded-md">
