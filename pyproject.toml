@@ -1,7 +1,7 @@
 [project]
-name = "ulam"
+name = "metropolis"
 version = "0.1.0"
-description = "Ulam project with modern Python tooling"
+description = "Metropolis project for exploring the capabilities of the Claude Agent SDK"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -91,7 +91,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.pyright]
-include = ["ulam", "main.py"]
+include = ["metropolis", "main.py"]
 exclude = ["**/__pycache__"]
 pythonVersion = "3.12"
 pythonPlatform = "Linux"

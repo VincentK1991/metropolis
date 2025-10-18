@@ -4,25 +4,26 @@ from claude_agent_sdk import ClaudeAgentOptions, HookMatcher
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from ulam.config.settings import db_config
-from ulam.db.session_store import SessionStore
-from ulam.db.skill_store import SkillStore
-from ulam.hooks import validate_deck_on_write
-from ulam.routes.agent_routes import router as agent_router
-from ulam.routes.session_routes import init_session_store
-from ulam.routes.session_routes import router as session_router
-from ulam.routes.skill_routes import init_skill_store
-from ulam.routes.skill_routes import router as skill_router
-from ulam.services.agent_manager import init_agent_manager
-from ulam.services.jsonl_handler import JSONLHandler
-from ulam.tools.test_tool import multiplication_server
+from metropolis.config.settings import db_config
+from metropolis.db.session_store import SessionStore
+from metropolis.db.skill_store import SkillStore
+from metropolis.hooks import validate_deck_on_write
+from metropolis.routes.agent_routes import router as agent_router
+from metropolis.routes.session_routes import init_session_store
+from metropolis.routes.session_routes import router as session_router
+from metropolis.routes.skill_routes import init_skill_store
+from metropolis.routes.skill_routes import router as skill_router
+from metropolis.services.agent_manager import init_agent_manager
+from metropolis.services.jsonl_handler import JSONLHandler
+from metropolis.tools.skill_tool import skill_server
+from metropolis.tools.test_tool import multiplication_server
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Manage application lifecycle."""
     # Startup
-    print("Starting Ulam Agent API...")
+    print("Starting Metropolis Agent API...")
 
     # Initialize MongoDB session store
     session_store = SessionStore(
@@ -54,7 +55,7 @@ async def lifespan(app: FastAPI):
         model="claude-sonnet-4-5",
         max_turns=100,
         permission_mode="bypassPermissions",
-        mcp_servers={"multiplication": multiplication_server},
+        mcp_servers={"multiplication": multiplication_server, "skill": skill_server},
         hooks={"PostToolUse": [HookMatcher(hooks=[validate_deck_on_write])]},
         env={
             "MAX_THINKING_TOKENS": "4000",
@@ -66,7 +67,7 @@ async def lifespan(app: FastAPI):
     yield
 
     # Shutdown
-    print("Shutting down Ulam Agent API...")
+    print("Shutting down Metropolis Agent API...")
     await session_store.close()
     await skill_store.close()
     print("MongoDB connection closed")
@@ -74,7 +75,7 @@ async def lifespan(app: FastAPI):
 
 # Create FastAPI application
 app = FastAPI(
-    title="Ulam Agent API",
+    title="Metropolis Agent API",
     description="WebSocket API for Claude Agent SDK",
     version="1.0.0",
     lifespan=lifespan,
@@ -106,7 +107,7 @@ app.include_router(skill_router)
 async def root():
     """Root endpoint."""
     return {
-        "message": "Ulam Agent API",
+        "message": "Metropolis Agent API",
         "version": "1.0.0",
         "websocket": "/ws/agent",
         "sessions_api": "/api/sessions",

@@ -3,9 +3,9 @@
 import asyncio
 import os
 
-from ulam.config.settings import db_config
-from ulam.db.session_store import SessionStore
-from ulam.services.jsonl_handler import JSONLHandler
+from metropolis.config.settings import db_config
+from metropolis.db.session_store import SessionStore
+from metropolis.services.jsonl_handler import JSONLHandler
 
 
 async def test_restore_cycle():
@@ -17,7 +17,9 @@ async def test_restore_cycle():
         mongodb_uri=db_config.uri, database_name=db_config.database
     )
     await session_store.create_indexes()
-    jsonl_handler = JSONLHandler(workspace_root="/home/vkieuvongngam/exploration/ulam")
+    jsonl_handler = JSONLHandler(
+        workspace_root="/home/vkieuvongngam/exploration/metropolis"
+    )
 
     test_session_id = "4ce6417b-7948-406e-bcbb-90a2c2000122"
     session_file = jsonl_handler.get_session_file_path(test_session_id)

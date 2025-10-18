@@ -2,7 +2,8 @@
 """Test the validation hook manually."""
 
 import asyncio
-from src.ulam.hooks import validate_deck_on_write
+
+from src.metropolis.hooks import validate_deck_on_write
 
 
 async def test_validation_hook():
@@ -10,17 +11,19 @@ async def test_validation_hook():
 
     # Simulate a Write tool call to a deck JSON file
     input_data = {
-        'tool_name': 'Write',
-        'tool_input': {
-            'file_path': '/Users/vkieuvongngam/Documents/mcp_servers/ulam/deck/data/deutsche_bank_deck.json'
+        "tool_name": "Write",
+        "tool_input": {
+            "file_path": "/Users/vkieuvongngam/Documents/mcp_servers/metropolis/deck/data/deutsche_bank_deck.json"
         },
-        'tool_response': 'File written successfully'
+        "tool_response": "File written successfully",
     }
 
     print("Testing validation hook with deutsche_bank_deck.json...")
     print("-" * 80)
 
-    result = await validate_deck_on_write(input_data, tool_use_id="test-001", context=None)
+    result = await validate_deck_on_write(
+        input_data, tool_use_id="test-001", context=None
+    )
 
     print("\nHook Result:")
     print(result)
@@ -31,14 +34,16 @@ async def test_validation_hook():
     print("-" * 80)
 
     input_data_non_deck = {
-        'tool_name': 'Write',
-        'tool_input': {
-            'file_path': '/Users/vkieuvongngam/Documents/mcp_servers/ulam/README.md'
+        "tool_name": "Write",
+        "tool_input": {
+            "file_path": "/Users/vkieuvongngam/Documents/mcp_servers/metropolis/README.md"
         },
-        'tool_response': 'File written successfully'
+        "tool_response": "File written successfully",
     }
 
-    result2 = await validate_deck_on_write(input_data_non_deck, tool_use_id="test-002", context=None)
+    result2 = await validate_deck_on_write(
+        input_data_non_deck, tool_use_id="test-002", context=None
+    )
     print(f"Result: {result2 or 'Skipped (as expected)'}")
 
 

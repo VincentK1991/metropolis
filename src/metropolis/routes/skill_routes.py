@@ -3,8 +3,8 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from ulam.db.models import ClaudeAgentSkill
-from ulam.db.skill_store import SkillStore
+from metropolis.db.models import ClaudeAgentSkill
+from metropolis.db.skill_store import SkillStore
 
 router = APIRouter(prefix="/api/skills", tags=["skills"])
 

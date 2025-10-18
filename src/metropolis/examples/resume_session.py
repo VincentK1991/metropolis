@@ -2,22 +2,19 @@ import asyncio
 
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient, HookMatcher
 
-from ulam.hooks import validate_deck_on_write
-from ulam.tools.test_tool import multiplication_server
-from ulam.utils.partial_messages import StreamPrintHandler
+from metropolis.hooks import validate_deck_on_write
+from metropolis.tools.test_tool import multiplication_server
+from metropolis.utils.partial_messages import StreamPrintHandler
+
+session_id = "4ce6417b-7948-406e-bcbb-90a2c2000122"
 
 options = ClaudeAgentOptions(
     include_partial_messages=True,
     model="claude-sonnet-4-5",
-    system_prompt={
-        "type": "preset",
-        "preset": "claude_code",
-        "append": "Always clean up any code .py files that you create after you are\
-            finishing your task so that they are not left lying around.",
-    },
     max_turns=100,
     permission_mode="bypassPermissions",
     mcp_servers={"multiplication": multiplication_server},
+    resume=session_id,
     # allowed_tools=["Read", "Write", "WebSearch"],
     hooks={"PostToolUse": [HookMatcher(hooks=[validate_deck_on_write])]},  # type: ignore
     env={

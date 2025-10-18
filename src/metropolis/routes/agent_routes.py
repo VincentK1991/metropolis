@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 
-from ulam.services.agent_manager import get_agent_manager
+from metropolis.services.agent_manager import get_agent_manager
 
 router = APIRouter()
 
@@ -43,10 +43,8 @@ async def websocket_agent_endpoint(websocket: WebSocket):
                     await agent_manager.resume_session(claude_session_id)
 
                     # Load historical messages
-                    messages = (
-                        await agent_manager.session_store.get_session_messages(
-                            claude_session_id
-                        )
+                    messages = await agent_manager.session_store.get_session_messages(
+                        claude_session_id
                     )
 
                     await websocket.send_text(
@@ -142,7 +140,7 @@ async def websocket_agent_endpoint(websocket: WebSocket):
         # Persist JSONL to MongoDB when WebSocket disconnects
         if claude_session_id:
             try:
-                from ulam.services.jsonl_handler import JSONLHandler
+                from metropolis.services.jsonl_handler import JSONLHandler
 
                 jsonl_handler = JSONLHandler()
                 await jsonl_handler.persist_to_mongodb(

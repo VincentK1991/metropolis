@@ -4,8 +4,8 @@ from datetime import UTC, datetime
 
 from fastapi import APIRouter, HTTPException
 
-from ulam.db.models import SessionMetadata
-from ulam.db.session_store import SessionStore
+from metropolis.db.models import SessionMetadata
+from metropolis.db.session_store import SessionStore
 
 router = APIRouter(prefix="/api/sessions", tags=["sessions"])
 

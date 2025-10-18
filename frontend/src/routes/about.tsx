@@ -8,7 +8,7 @@ function About() {
   return (
     <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="backdrop-blur-xl bg-white/70 dark:bg-deco-navy-500/70 backdrop-saturate-150 rounded-2xl dark:rounded-lg shadow-xl dark:shadow-2xl p-8 max-w-2xl w-full border border-white/40 dark:border-deco-gold/30 transition-all duration-300">
-        <h1 className="text-4xl font-bold text-gray-800 dark:text-nouveau-cream mb-6">About Ulam</h1>
+        <h1 className="text-4xl font-bold text-gray-800 dark:text-nouveau-cream mb-6">About Metropolis</h1>
 
         <div className="space-y-4 text-gray-700 dark:text-gray-300">
           <p className="text-lg">

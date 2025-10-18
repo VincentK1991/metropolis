@@ -2,9 +2,9 @@ import asyncio
 
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient, HookMatcher
 
-from ulam.hooks import validate_deck_on_write
-from ulam.tools.test_tool import multiplication_server
-from ulam.utils.partial_messages import StreamPrintHandler
+from metropolis.hooks import validate_deck_on_write
+from metropolis.tools.test_tool import multiplication_server
+from metropolis.utils.partial_messages import StreamPrintHandler
 
 options = ClaudeAgentOptions(
     include_partial_messages=True,
@@ -16,7 +16,7 @@ options = ClaudeAgentOptions(
     env={
         "MAX_THINKING_TOKENS": "4000",
     },
-    setting_sources=["local","project"],
+    setting_sources=["local", "project"],
 )
 
 

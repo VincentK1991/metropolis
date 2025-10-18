@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import Optional
 
-from ulam.db.session_store import SessionStore
+from metropolis.db.session_store import SessionStore
 
 
 class JSONLHandler:

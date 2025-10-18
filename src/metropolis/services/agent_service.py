@@ -3,9 +3,9 @@ from typing import AsyncGenerator
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient, HookMatcher
 from fastapi import WebSocket
 
-from ulam.hooks import validate_deck_on_write
-from ulam.tools.test_tool import multiplication_server
-from ulam.utils.websocket_handler import WebSocketStreamHandler
+from metropolis.hooks import validate_deck_on_write
+from metropolis.tools.test_tool import multiplication_server
+from metropolis.utils.websocket_handler import WebSocketStreamHandler
 
 
 class AgentService:

@@ -2,10 +2,11 @@
 """Test that conversation.py has hooks properly configured."""
 
 import sys
-sys.path.insert(0, 'src')
 
-from ulam.examples.conversation import options
-from ulam.hooks import validate_deck_on_write
+sys.path.insert(0, "src")
+
+from metropolis.examples.conversation import options
+from metropolis.hooks import validate_deck_on_write
 
 
 def test_hooks_configuration():
@@ -29,10 +30,12 @@ def test_hooks_configuration():
 
     # Check validate_deck_on_write is in the hooks
     first_matcher = post_tool_hooks[0]
-    assert hasattr(first_matcher, 'hooks'), "❌ HookMatcher missing 'hooks' attribute"
+    assert hasattr(first_matcher, "hooks"), "❌ HookMatcher missing 'hooks' attribute"
 
     hook_functions = first_matcher.hooks
-    assert validate_deck_on_write in hook_functions, "❌ validate_deck_on_write not found in hooks"
+    assert validate_deck_on_write in hook_functions, (
+        "❌ validate_deck_on_write not found in hooks"
+    )
     print("✅ validate_deck_on_write hook properly registered")
 
     print("\n" + "=" * 80)
@@ -44,10 +47,12 @@ def test_hooks_configuration():
     print(f"  Model: {options.model}")
     print(f"  Max Turns: {options.max_turns}")
     print(f"  Permission Mode: {options.permission_mode}")
-    print(f"  MCP Servers: {list(options.mcp_servers.keys()) if options.mcp_servers else []}")
+    print(
+        f"  MCP Servers: {list(options.mcp_servers.keys()) if options.mcp_servers else []}"
+    )
     print(f"  Hooks: {list(options.hooks.keys())}")
     print(f"    - PostToolUse: {len(post_tool_hooks)} hook(s)")
-    print(f"      → validate_deck_on_write (deck JSON validation)")
+    print("      → validate_deck_on_write (deck JSON validation)")
 
 
 if __name__ == "__main__":

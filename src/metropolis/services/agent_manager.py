@@ -6,10 +6,10 @@ from typing import AsyncGenerator, Dict, Optional
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient, ResultMessage
 from fastapi import WebSocket
 
-from ulam.db.models import ClaudeAgentMessage, ClaudeAgentSession, MessageRole
-from ulam.db.session_store import SessionStore
-from ulam.services.jsonl_handler import JSONLHandler
-from ulam.utils.websocket_handler import WebSocketStreamHandler
+from metropolis.db.models import ClaudeAgentMessage, ClaudeAgentSession, MessageRole
+from metropolis.db.session_store import SessionStore
+from metropolis.services.jsonl_handler import JSONLHandler
+from metropolis.utils.websocket_handler import WebSocketStreamHandler
 
 
 class AgentManager:

@@ -1,4 +1,4 @@
-# Ulam Frontend
+# Metropolis Frontend
 
 React + TypeScript + Vite + Tailwind CSS
 

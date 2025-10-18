@@ -1,4 +1,4 @@
-"""Hooks module for ulam MCP server."""
+"""Hooks module for metropolis MCP server."""
 
 from .model_validate_hook import validate_deck_on_write
 

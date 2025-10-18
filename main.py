@@ -1,11 +1,11 @@
-"""Main module for the Ulam project."""
+"""Main module for the Metropolis project."""
 
-from ulam import __version__
+from metropolis import __version__
 
 
 def hello() -> str:
     """Return a greeting message."""
-    return f"Hello from ulam v{__version__}!"
+    return f"Hello from metropolis v{__version__}!"
 
 
 def main() -> None:

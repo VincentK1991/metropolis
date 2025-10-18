@@ -2,9 +2,9 @@
 
 import asyncio
 
-from ulam.config.settings import db_config
-from ulam.db.session_store import SessionStore
-from ulam.services.jsonl_handler import JSONLHandler
+from metropolis.config.settings import db_config
+from metropolis.db.session_store import SessionStore
+from metropolis.services.jsonl_handler import JSONLHandler
 
 
 async def test_jsonl_persistence():
@@ -81,7 +81,7 @@ async def test_project_path():
     session_file_path = jsonl_handler.get_session_file_path(test_session_id)
     print(f"Session file path: {session_file_path}")
 
-    assert str(project_path).endswith("ulam") or "-home-" in str(project_path)
+    assert str(project_path).endswith("metropolis") or "-home-" in str(project_path)
     print("✓ Project path looks correct")
 
 

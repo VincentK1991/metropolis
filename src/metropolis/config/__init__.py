@@ -1,4 +1,4 @@
-"""Configuration module for Ulam application."""
+"""Configuration module for Metropolis application."""
 
 from .settings import db_config, session_config
 

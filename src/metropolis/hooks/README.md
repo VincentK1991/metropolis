@@ -30,7 +30,7 @@ To use this hook in your Claude Agent:
 
 ```python
 from claude_agent import ClaudeAgent, ClaudeAgentOptions, HookMatcher
-from ulam.hooks import validate_deck_on_write
+from metropolis.hooks import validate_deck_on_write
 
 options = ClaudeAgentOptions(
     hooks={
@@ -85,7 +85,7 @@ python test_hook.py
 ## File Structure
 
 ```
-src/ulam/hooks/
+src/metropolis/hooks/
 ├── __init__.py                 # Package exports
 ├── model_validate_hook.py      # Hook implementation
 └── README.md                   # This file
