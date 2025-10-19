@@ -35,7 +35,7 @@ export const ChatPanel = () => {
 
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold">Claude Agent Assistant</h2>
+            <h2 className="text-xl font-semibold">Chat with Metropolis</h2>
             <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
               {isConnected ? 'Connected and ready' : 'Connecting...'}
             </p>

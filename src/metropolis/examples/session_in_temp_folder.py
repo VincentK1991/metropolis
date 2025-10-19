@@ -34,6 +34,7 @@ options = ClaudeAgentOptions(
             the task requires a specific set of instructions called skills that
             you need to follow to successfully complete the task.
         use the skills that you have in the tool to learn what you can do.
+        the skill id is {skill_id}
         always work within the folder {temp_path} do not work outside of this folder.
         """,
     },

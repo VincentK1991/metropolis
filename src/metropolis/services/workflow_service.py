@@ -84,15 +84,16 @@ class WorkflowService:
                 system_prompt={
                     "type": "preset",
                     "preset": "claude_code",
-                    "append": f"""Always clean up any code .py files that you create after you are
-                        finishing your task so that they are not left lying around.
-                        if a task requires running python code and python library is required
-                        use uv as package manager to install python library.
-                        You will need this to implement the task.
-                        the task requires a specific set of instructions called skills that
-                        you need to follow to successfully complete the task.
-                    use the skills that you have in the tool to learn what you can do.
-                    always work within the folder {temp_path} do not work outside of this folder.
+                    "append": f"""Always clean up any code .py files that you create
+                    after you are finishing your task so that they are not left lying
+                    around. if a task requires running python code and python library
+                    is required use uv as package manager to install python library.
+                    You will need this to implement the task. the task requires
+                    a specific set of instructions called skills that you need to
+                    follow to successfully complete the task. use the skills
+                    that you have in the tool to learn what you can do.
+                    The skill id is {skill_id}. Always work
+                    within the folder {temp_path} do not work outside of this folder.
                     """,
                 },
                 max_turns=100,
