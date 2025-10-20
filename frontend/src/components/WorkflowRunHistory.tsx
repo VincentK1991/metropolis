@@ -4,7 +4,7 @@
 
 import { useState } from 'react'
 import { useWorkflowRuns } from '../hooks/useWorkflows'
-import { WorkflowRun, ExecutionMessage } from '../types/workflow'
+import type { WorkflowRun, ExecutionMessage } from '../types/workflow'
 
 export function WorkflowRunHistory() {
   const [currentPage, setCurrentPage] = useState(0)
@@ -164,7 +164,7 @@ interface WorkflowRunDetailProps {
 
 function WorkflowRunDetail({ run, onBack }: WorkflowRunDetailProps) {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-w-0">
       {/* Header */}
       <div className="p-6 border-b border-nouveau-lavender-200 dark:border-deco-gold/20">
         <div className="flex items-center gap-4 mb-4">
@@ -226,7 +226,7 @@ function WorkflowRunDetail({ run, onBack }: WorkflowRunDetailProps) {
       </div>
 
       {/* Execution Log */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-6 min-w-0 w-full">
         <h3 className="text-lg font-medium text-nouveau-lavender-800 dark:text-deco-gold mb-4">
           Execution Log
         </h3>
@@ -234,7 +234,7 @@ function WorkflowRunDetail({ run, onBack }: WorkflowRunDetailProps) {
         {run.execution_log.length === 0 ? (
           <p className="text-nouveau-lavender-600 dark:text-nouveau-cream/60">No execution log available</p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3 min-w-0 w-full">
             {run.execution_log.map((message, index) => (
               <ExecutionLogEntry key={index} message={message} />
             ))}
@@ -255,23 +255,23 @@ function ExecutionLogEntry({ message }: ExecutionLogEntryProps) {
   switch (message.type) {
     case 'thinking':
       return (
-        <div className="p-3 bg-gray-100 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 rounded-md">
+        <div className="p-3 bg-gray-100 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 rounded-md min-w-0">
           <div className="flex items-center justify-between mb-1">
             <span className="text-gray-700 dark:text-gray-300 text-sm font-medium">💭 Thinking</span>
             <span className="text-gray-500 dark:text-gray-400 text-xs">{timestamp}</span>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap">{message.content}</p>
+          <p className="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap break-words overflow-hidden">{message.content}</p>
         </div>
       )
 
     case 'text':
       return (
-        <div className="p-3 bg-white dark:bg-deco-navy/30 border border-nouveau-lavender-200 dark:border-deco-gold/20 rounded-md">
+        <div className="p-3 bg-white dark:bg-deco-navy/30 border border-nouveau-lavender-200 dark:border-deco-gold/20 rounded-md min-w-0">
           <div className="flex items-center justify-between mb-1">
             <span className="text-nouveau-lavender-700 dark:text-deco-gold text-sm font-medium">💬 Response</span>
             <span className="text-nouveau-lavender-500 dark:text-nouveau-cream/60 text-xs">{timestamp}</span>
           </div>
-          <p className="text-nouveau-lavender-800 dark:text-nouveau-cream text-sm whitespace-pre-wrap">
+          <p className="text-nouveau-lavender-800 dark:text-nouveau-cream text-sm whitespace-pre-wrap break-words overflow-hidden">
             {message.content}
           </p>
         </div>
@@ -279,14 +279,14 @@ function ExecutionLogEntry({ message }: ExecutionLogEntryProps) {
 
     case 'tool_use':
       return (
-        <div className="p-3 bg-purple-100 dark:bg-purple-900/30 border border-purple-300 dark:border-purple-600 rounded-md">
+        <div className="p-3 bg-purple-100 dark:bg-purple-900/30 border border-purple-300 dark:border-purple-600 rounded-md min-w-0">
           <div className="flex items-center justify-between mb-1">
             <span className="text-purple-800 dark:text-purple-200 text-sm font-medium">
               🔧 Tool: {message.toolName}
             </span>
             <span className="text-purple-600 dark:text-purple-300 text-xs">{timestamp}</span>
           </div>
-          <pre className="text-purple-700 dark:text-purple-300 text-xs bg-purple-50 dark:bg-purple-900/50 p-2 rounded overflow-x-auto">
+          <pre className="text-purple-700 dark:text-purple-300 text-xs bg-purple-50 dark:bg-purple-900/50 p-2 rounded overflow-x-auto min-w-0 max-w-full">
             {JSON.stringify(message.toolInput, null, 2)}
           </pre>
         </div>
@@ -294,12 +294,12 @@ function ExecutionLogEntry({ message }: ExecutionLogEntryProps) {
 
     case 'tool_result':
       return (
-        <div className="p-3 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-600 rounded-md">
+        <div className="p-3 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-600 rounded-md min-w-0">
           <div className="flex items-center justify-between mb-1">
             <span className="text-green-800 dark:text-green-200 text-sm font-medium">✅ Tool Result</span>
             <span className="text-green-600 dark:text-green-300 text-xs">{timestamp}</span>
           </div>
-          <p className="text-green-700 dark:text-green-300 text-sm whitespace-pre-wrap">
+          <p className="text-green-700 dark:text-green-300 text-sm whitespace-pre-wrap break-words overflow-hidden">
             {message.content}
           </p>
         </div>
@@ -307,12 +307,12 @@ function ExecutionLogEntry({ message }: ExecutionLogEntryProps) {
 
     case 'error':
       return (
-        <div className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-600 rounded-md">
+        <div className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-600 rounded-md min-w-0">
           <div className="flex items-center justify-between mb-1">
             <span className="text-red-800 dark:text-red-200 text-sm font-medium">❌ Error</span>
             <span className="text-red-600 dark:text-red-300 text-xs">{timestamp}</span>
           </div>
-          <p className="text-red-700 dark:text-red-300 text-sm whitespace-pre-wrap">
+          <p className="text-red-700 dark:text-red-300 text-sm whitespace-pre-wrap break-words overflow-hidden">
             {message.content}
           </p>
         </div>
@@ -320,12 +320,12 @@ function ExecutionLogEntry({ message }: ExecutionLogEntryProps) {
 
     default:
       return (
-        <div className="p-3 bg-gray-100 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 rounded-md">
+        <div className="p-3 bg-gray-100 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 rounded-md min-w-0">
           <div className="flex items-center justify-between mb-1">
             <span className="text-gray-700 dark:text-gray-300 text-sm font-medium">{message.type}</span>
             <span className="text-gray-500 dark:text-gray-400 text-xs">{timestamp}</span>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap">
+          <p className="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap break-words overflow-hidden">
             {message.content}
           </p>
         </div>

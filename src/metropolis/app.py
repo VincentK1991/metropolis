@@ -1,6 +1,5 @@
 from contextlib import asynccontextmanager
 
-from claude_agent_sdk import ClaudeAgentOptions, HookMatcher
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -8,7 +7,6 @@ from metropolis.config.settings import db_config
 from metropolis.db.session_store import SessionStore
 from metropolis.db.skill_store import SkillStore
 from metropolis.db.workflow_store import WorkflowStore
-from metropolis.hooks import validate_deck_on_write
 from metropolis.routes.agent_routes import router as agent_router
 from metropolis.routes.session_routes import init_session_store
 from metropolis.routes.session_routes import router as session_router
@@ -17,9 +15,8 @@ from metropolis.routes.skill_routes import router as skill_router
 from metropolis.routes.workflow_routes import init_workflow_store
 from metropolis.routes.workflow_routes import router as workflow_router
 from metropolis.services.agent_manager import init_agent_manager
+from metropolis.services.agent_service import main_agent_option
 from metropolis.services.jsonl_handler import JSONLHandler
-from metropolis.tools.skill_tool import skill_server
-from metropolis.tools.test_tool import multiplication_server
 
 
 @asynccontextmanager
@@ -69,19 +66,7 @@ async def lifespan(app: FastAPI):
     jsonl_handler = JSONLHandler()
     print("JSONL handler initialized")
 
-    # Initialize agent manager with Claude SDK options
-    options = ClaudeAgentOptions(
-        include_partial_messages=True,
-        model="claude-sonnet-4-5",
-        max_turns=100,
-        permission_mode="bypassPermissions",
-        mcp_servers={"multiplication": multiplication_server, "skill": skill_server},
-        hooks={"PostToolUse": [HookMatcher(hooks=[validate_deck_on_write])]},
-        env={
-            "MAX_THINKING_TOKENS": "4000",
-        },
-    )
-    init_agent_manager(session_store, options, jsonl_handler)
+    init_agent_manager(session_store, main_agent_option, jsonl_handler)
     print("Agent manager initialized")
 
     yield

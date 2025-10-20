@@ -2,10 +2,10 @@
  * TanStack Query hooks for workflow operations.
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState, useCallback } from 'react'
 import { workflowService } from '../api/workflowService'
-import { Workflow, WorkflowRun, WorkflowExecutionEvent } from '../types/workflow'
+import type { WorkflowExecutionEvent } from '../types/workflow'
 
 /**
  * Hook to fetch available workflows (skills that can be executed as workflows).

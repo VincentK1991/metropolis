@@ -139,7 +139,8 @@ class AgentManager:
             # After streaming completes, read JSONL file to get session ID
             # The SDK writes session info to the JSONL file
             if session_id_captured is None:
-                # Read the JSONL files in the project directory to find the newest session
+                # Read the JSONL files in the project directory
+                # to find the newest session
                 import os
 
                 project_path = self.jsonl_handler.get_project_path()

@@ -1,7 +1,7 @@
-import React, { createContext, useContext, ReactNode } from 'react'
+import React, { createContext, useContext, type ReactNode } from 'react'
 import { useAgentChat } from '../hooks/useAgentChat'
-import { ChatMessage } from '../types/chat'
-import { SessionInfo } from '../types/session'
+import type { ChatMessage } from '../types/chat'
+import type { SessionInfo } from '../types/session'
 
 interface AgentChatContextType {
   messages: ChatMessage[]

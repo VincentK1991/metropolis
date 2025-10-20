@@ -3,7 +3,7 @@
  */
 
 import { createApiClient } from './baseApiclient'
-import { Workflow, WorkflowRun, WorkflowExecutionEvent } from '../types/workflow'
+import type { Workflow, WorkflowRun, WorkflowExecutionEvent } from '../types/workflow'
 
 const workflowApi = createApiClient('/api')
 
@@ -48,7 +48,7 @@ export const workflowService = {
    */
   executeWorkflow: (
     skillId: string,
-    userInput: string,
+    _userInput: string,
     onEvent: (event: WorkflowExecutionEvent) => void,
     onError?: (error: Event) => void,
     onComplete?: () => void

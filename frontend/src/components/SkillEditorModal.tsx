@@ -149,7 +149,7 @@ export const SkillEditorModal = ({ skill, onClose }: SkillEditorModalProps) => {
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={{
-                      code({ node, inline, className, children, ...props }: any) {
+                      code({ inline, className, children, ...props }: any) {
                         const match = /language-(\w+)/.exec(className || '')
                         return !inline && match ? (
                           <SyntaxHighlighter
@@ -166,20 +166,20 @@ export const SkillEditorModal = ({ skill, onClose }: SkillEditorModalProps) => {
                           </code>
                         )
                       },
-                      h1: ({ node, ...props }) => <h1 className="text-xl font-bold mt-4 mb-2 dark:text-gray-100" {...props} />,
-                      h2: ({ node, ...props }) => <h2 className="text-lg font-bold mt-3 mb-2 dark:text-gray-100" {...props} />,
-                      h3: ({ node, ...props }) => <h3 className="text-base font-bold mt-2 mb-1 dark:text-gray-100" {...props} />,
-                      p: ({ node, ...props }) => <p className="my-2 dark:text-gray-200" {...props} />,
-                      ul: ({ node, ...props }) => <ul className="list-disc list-inside my-2 space-y-1 dark:text-gray-200" {...props} />,
-                      ol: ({ node, ...props }) => <ol className="list-decimal list-inside my-2 space-y-1 dark:text-gray-200" {...props} />,
-                      li: ({ node, ...props }) => <li className="ml-2" {...props} />,
-                      a: ({ node, ...props }) => <a className="text-nouveau-lavender-500 dark:text-deco-gold hover:underline" {...props} />,
-                      blockquote: ({ node, ...props }) => (
+                      h1: (props) => <h1 className="text-xl font-bold mt-4 mb-2 dark:text-gray-100" {...props} />,
+                      h2: (props) => <h2 className="text-lg font-bold mt-3 mb-2 dark:text-gray-100" {...props} />,
+                      h3: (props) => <h3 className="text-base font-bold mt-2 mb-1 dark:text-gray-100" {...props} />,
+                      p: (props) => <p className="my-2 dark:text-gray-200" {...props} />,
+                      ul: (props) => <ul className="list-disc list-inside my-2 space-y-1 dark:text-gray-200" {...props} />,
+                      ol: (props) => <ol className="list-decimal list-inside my-2 space-y-1 dark:text-gray-200" {...props} />,
+                      li: (props) => <li className="ml-2" {...props} />,
+                      a: (props) => <a className="text-nouveau-lavender-500 dark:text-deco-gold hover:underline" {...props} />,
+                      blockquote: (props) => (
                         <blockquote className="border-l-4 border-nouveau-sage dark:border-deco-gold pl-4 my-2 italic text-gray-700 dark:text-gray-300" {...props} />
                       ),
-                      hr: ({ node, ...props }) => <hr className="my-4 border-gray-300 dark:border-gray-600" {...props} />,
-                      strong: ({ node, ...props }) => <strong className="font-bold dark:text-gray-100" {...props} />,
-                      em: ({ node, ...props }) => <em className="italic" {...props} />,
+                      hr: (props) => <hr className="my-4 border-gray-300 dark:border-gray-600" {...props} />,
+                      strong: (props) => <strong className="font-bold dark:text-gray-100" {...props} />,
+                      em: (props) => <em className="italic" {...props} />,
                     }}
                   >
                     {content}

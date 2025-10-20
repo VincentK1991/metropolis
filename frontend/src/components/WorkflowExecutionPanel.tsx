@@ -4,7 +4,9 @@
 
 import { useState } from 'react'
 import { useWorkflowExecution } from '../hooks/useWorkflows'
-import { Workflow, ExecutionMessage } from '../types/workflow'
+import type { Workflow } from '../types/workflow'
+import { StreamingMessagePanel } from './StreamingMessagePanel'
+import { ExecutionEventCard } from './ExecutionEventCard'
 import ReactMarkdown from 'react-markdown'
 
 interface WorkflowExecutionPanelProps {
@@ -37,6 +39,8 @@ export function WorkflowExecutionPanel({ selectedWorkflow }: WorkflowExecutionPa
       </div>
     )
   }
+
+  const completionEvent = events.find(e => e.type === 'complete')
 
   return (
     <div className="flex flex-col h-full">
@@ -93,134 +97,38 @@ export function WorkflowExecutionPanel({ selectedWorkflow }: WorkflowExecutionPa
         )}
       </div>
 
-      {/* Execution Results */}
-      <div className="flex-1 overflow-y-auto p-6">
-        {error && (
-          <div className="mb-4 p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-600 rounded-md">
-            <p className="text-red-800 dark:text-red-200 font-medium">Error</p>
-            <p className="text-red-700 dark:text-red-300 text-sm">{error}</p>
-          </div>
-        )}
+      {/* Streaming Message Panel - Execution Results */}
+      <StreamingMessagePanel
+        messages={events}
+        error={error}
+        messageRenderer={ExecutionEventCard}
+        emptyStateIcon="🚀"
+        emptyStateTitle="Ready to execute workflow"
+        emptyStateDescription="Enter your input above and click Execute"
+      />
 
-        {events.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-nouveau-lavender-800 dark:text-deco-gold">
-              Execution Log
-            </h3>
-
-            <div className="space-y-3">
-              {events.map((event, index) => (
-                <ExecutionEventCard key={index} event={event} />
-              ))}
-            </div>
-
-            {/* Show completion status */}
-            {events.some(e => e.type === 'complete') && (
-              <div className="mt-6 p-4 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-600 rounded-md">
-                <p className="text-green-800 dark:text-green-200 font-medium">
-                  ✅ Workflow completed successfully
+      {/* Completion Status & Artifacts */}
+      {completionEvent && (
+        <div className="px-6 py-4 border-t border-nouveau-lavender-200 dark:border-deco-gold/20 bg-green-50 dark:bg-green-900/20">
+          <div className="p-4 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-600 rounded-md">
+            <p className="text-green-800 dark:text-green-200 font-medium">
+              ✅ Workflow completed successfully
+            </p>
+            {completionEvent.artifact_paths && completionEvent.artifact_paths.length > 0 && (
+              <div className="mt-2">
+                <p className="text-green-700 dark:text-green-300 text-sm font-medium">
+                  Generated Artifacts:
                 </p>
-                {events.find(e => e.type === 'complete' && e.artifact_paths)?.artifact_paths?.length > 0 && (
-                  <div className="mt-2">
-                    <p className="text-green-700 dark:text-green-300 text-sm font-medium">
-                      Generated Artifacts:
-                    </p>
-                    <ul className="text-green-700 dark:text-green-300 text-sm mt-1">
-                      {events.find(e => e.type === 'complete')?.artifact_paths?.map((path, i) => (
-                        <li key={i} className="font-mono">{path}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <ul className="text-green-700 dark:text-green-300 text-sm mt-1">
+                  {completionEvent.artifact_paths.map((path, i) => (
+                    <li key={i} className="font-mono">{path}</li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
-        )}
-
-        {events.length === 0 && !error && !isExecuting && (
-          <div className="text-center py-12 text-nouveau-lavender-600 dark:text-nouveau-cream/60">
-            <div className="text-4xl mb-4">🚀</div>
-            <p>Ready to execute workflow</p>
-            <p className="text-sm mt-1">Enter your input above and click Execute</p>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
-}
-
-interface ExecutionEventCardProps {
-  event: any // WorkflowExecutionEvent but with flexible data
-}
-
-function ExecutionEventCard({ event }: ExecutionEventCardProps) {
-  if (event.type === 'start') {
-    return (
-      <div className="p-3 bg-blue-100 dark:bg-blue-900/30 border border-blue-300 dark:border-blue-600 rounded-md">
-        <p className="text-blue-800 dark:text-blue-200 text-sm">
-          🚀 Workflow execution started
-        </p>
-      </div>
-    )
-  }
-
-  // Handle message events (thinking, text, tool_use, tool_result)
-  // Check if event has data property or is the message directly
-  const message = event.data || event
-
-  if (message && typeof message === 'object' && message.type) {
-    switch (message.type) {
-      case 'thinking':
-        return (
-          <div className="p-3 bg-gray-100 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 rounded-md">
-            <p className="text-gray-700 dark:text-gray-300 text-sm font-medium mb-1">💭 Thinking</p>
-            <p className="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap">{message.content}</p>
-          </div>
-        )
-
-      case 'text':
-        return (
-          <div className="p-3 bg-white dark:bg-deco-navy/30 border border-nouveau-lavender-200 dark:border-deco-gold/20 rounded-md">
-            <p className="text-nouveau-lavender-800 dark:text-nouveau-cream text-sm whitespace-pre-wrap">
-              {message.content}
-            </p>
-          </div>
-        )
-
-      case 'tool_use':
-        return (
-          <div className="p-3 bg-purple-100 dark:bg-purple-900/30 border border-purple-300 dark:border-purple-600 rounded-md">
-            <p className="text-purple-800 dark:text-purple-200 text-sm font-medium mb-1">
-              🔧 Tool: {message.toolName}
-            </p>
-            <pre className="text-purple-700 dark:text-purple-300 text-xs bg-purple-50 dark:bg-purple-900/50 p-2 rounded overflow-x-auto">
-              {JSON.stringify(message.toolInput, null, 2)}
-            </pre>
-          </div>
-        )
-
-      case 'tool_result':
-        return (
-          <div className="p-3 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-600 rounded-md">
-            <p className="text-green-800 dark:text-green-200 text-sm font-medium mb-1">
-              ✅ Tool Result
-            </p>
-            <p className="text-green-700 dark:text-green-300 text-sm whitespace-pre-wrap">
-              {message.content}
-            </p>
-          </div>
-        )
-
-      default:
-        return (
-          <div className="p-3 bg-gray-100 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 rounded-md">
-            <p className="text-gray-700 dark:text-gray-300 text-sm">
-              {message.type}: {message.content}
-            </p>
-          </div>
-        )
-    }
-  }
-
-  return null
 }

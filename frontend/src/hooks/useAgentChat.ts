@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { agentService } from '../api/agentService'
-import { ChatMessage, MessageContent, WebSocketMessage } from '../types/chat'
-import { SessionInfo } from '../types/session'
+import type { ChatMessage, MessageContent, WebSocketMessage, HistoricalMessage } from '../types/chat'
+import type { SessionInfo } from '../types/session'
 
 interface UseAgentChatResult {
   messages: ChatMessage[]
@@ -36,7 +36,7 @@ export const useAgentChat = (): UseAgentChatResult => {
       await agentService.connect()
       setIsConnected(true)
       setError(null)
-    } catch (err) {
+    } catch {
       setError('Failed to connect to agent service')
       setIsConnected(false)
     }
@@ -76,7 +76,7 @@ export const useAgentChat = (): UseAgentChatResult => {
 
       // Don't send init_session for new sessions
       // The first query will create the session
-    } catch (err) {
+    } catch {
       setError('Failed to connect to agent service')
       setIsConnected(false)
     }
@@ -100,7 +100,7 @@ export const useAgentChat = (): UseAgentChatResult => {
 
       // Send init_session for the selected session
       agentService.sendInitSession(newSessionId)
-    } catch (err) {
+    } catch {
       setError('Failed to connect to agent service')
       setIsConnected(false)
       setIsLoadingHistory(false)
@@ -138,7 +138,7 @@ export const useAgentChat = (): UseAgentChatResult => {
 
       setIsStreaming(true)
       agentService.sendMessage(text, sessionId)
-    } catch (err) {
+    } catch {
       setError('Failed to send message')
       setIsStreaming(false)
     }
@@ -148,23 +148,25 @@ export const useAgentChat = (): UseAgentChatResult => {
     const unsubscribeMessage = agentService.onMessage((message: WebSocketMessage) => {
       // Handle session_created message (new session with first query)
       if (message.type === 'session_created') {
-        const sessionCreatedMsg = message as any
-        setSessionId(sessionCreatedMsg.session_id)
-        localStorage.setItem('lastSessionId', sessionCreatedMsg.session_id)
-        console.log('Session created with ID:', sessionCreatedMsg.session_id)
-        loadAvailableSessions()
+        if (message.session_id) {
+          setSessionId(message.session_id)
+          localStorage.setItem('lastSessionId', message.session_id)
+          console.log('Session created with ID:', message.session_id)
+          loadAvailableSessions()
+        }
         return
       }
 
       // Handle session_ready message (resumed session)
       if (message.type === 'session_ready') {
-        const sessionReadyMsg = message as any
-        setSessionId(sessionReadyMsg.claude_session_id)
-        localStorage.setItem('lastSessionId', sessionReadyMsg.claude_session_id)
+        if (message.claude_session_id) {
+          setSessionId(message.claude_session_id)
+          localStorage.setItem('lastSessionId', message.claude_session_id)
+        }
 
         // Load historical messages
-        if (sessionReadyMsg.messages && sessionReadyMsg.messages.length > 0) {
-          const historicalMessages = sessionReadyMsg.messages.map((msg: any) => ({
+        if (message.messages && message.messages.length > 0) {
+          const historicalMessages = message.messages.map((msg: HistoricalMessage): ChatMessage => ({
             id: `${msg.role}-${msg.sequence}`,
             role: msg.role,
             contents: msg.content_blocks,
@@ -194,9 +196,11 @@ export const useAgentChat = (): UseAgentChatResult => {
       }
 
       // Add content to current streaming message
-      if (currentMessageRef.current) {
+      if (currentMessageRef.current &&
+          (message.type === 'text' || message.type === 'thinking' ||
+           message.type === 'tool_use' || message.type === 'tool_result')) {
         const newContent: MessageContent = {
-          type: message.type as any,
+          type: message.type,
           content: message.content || '',
           timestamp: new Date(),
           ...(message.toolName && { toolName: message.toolName }),
@@ -240,7 +244,7 @@ export const useAgentChat = (): UseAgentChatResult => {
       }
     })
 
-    const unsubscribeError = agentService.onError((error) => {
+    const unsubscribeError = agentService.onError(() => {
       setError('WebSocket connection error')
       setIsConnected(false)
       setIsStreaming(false)
@@ -287,7 +291,7 @@ export const useAgentChat = (): UseAgentChatResult => {
           // For new sessions, don't send init_session
           // The first query will create the session
         }
-      } catch (err) {
+      } catch {
         if (isMounted) {
           setError('Failed to connect to agent service')
           setIsConnected(false)

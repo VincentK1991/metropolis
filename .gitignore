@@ -172,3 +172,8 @@ cython_debug/
 ./notebook
 *.ipynb
 .playwright-mcp/
+artifacts/
+temp_folder/
+.cursor/
+documentations/
+templates/

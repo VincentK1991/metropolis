@@ -4,7 +4,7 @@
 
 import { useState } from 'react'
 import { useWorkflows } from '../hooks/useWorkflows'
-import { Workflow } from '../types/workflow'
+import type { Workflow } from '../types/workflow'
 
 interface WorkflowListProps {
   selectedWorkflow: Workflow | null

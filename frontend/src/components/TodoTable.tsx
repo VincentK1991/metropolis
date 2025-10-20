@@ -1,4 +1,4 @@
-import { TodoItem } from '../types/chat'
+import type { TodoItem } from '../types/chat'
 
 interface TodoTableProps {
   todos: TodoItem[]

@@ -52,6 +52,13 @@ export interface ChatMessage {
   timestamp: Date
 }
 
+export interface HistoricalMessage {
+  role: 'user' | 'assistant'
+  sequence: number
+  content_blocks: MessageContent[]
+  created_at: string
+}
+
 export interface WebSocketMessage {
   type: MessageContentType | 'complete' | 'error' | 'session_created' | 'session_ready' | 'session_id_captured'
   content?: string
@@ -62,6 +69,6 @@ export interface WebSocketMessage {
   message?: string
   session_id?: string
   claude_session_id?: string
-  messages?: any[]
+  messages?: HistoricalMessage[]
 }
 

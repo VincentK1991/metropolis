@@ -22,9 +22,11 @@ export interface ExecutionMessage {
 }
 
 export interface WorkflowExecutionEvent {
-  type: 'start' | 'message' | 'complete' | 'error'
+  type: 'start' | 'thinking' | 'text' | 'tool_use' | 'tool_result' | 'complete' | 'error'
   run_id?: string
-  data?: ExecutionMessage | { run_id: string } | { error: string }
+  content?: string
+  toolName?: string
+  toolInput?: any
   error?: string
   artifact_paths?: string[]
 }

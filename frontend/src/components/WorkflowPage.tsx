@@ -3,10 +3,10 @@
  */
 
 import { useState } from 'react'
-import { WorkflowList } from './WorkflowList'
-import { WorkflowExecutionPanel } from './WorkflowExecutionPanel'
-import { WorkflowRunHistory } from './WorkflowRunHistory'
-import { Workflow } from '../types/workflow'
+import { WorkflowList } from './WorkflowList.tsx'
+import { WorkflowExecutionPanel } from './WorkflowExecutionPanel.tsx'
+import { WorkflowRunHistory } from './WorkflowRunHistory.tsx'
+import type { Workflow } from '../types/workflow'
 
 export function WorkflowPage() {
   const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null)
@@ -34,7 +34,7 @@ export function WorkflowPage() {
       </div>
 
       {/* Right Panel - Execution Interface & History */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Tab Navigation */}
         <div className="flex border-b border-nouveau-lavender-200 dark:border-deco-gold/20 bg-white/40 dark:bg-deco-navy/40 backdrop-blur-sm">
           <button
