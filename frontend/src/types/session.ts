@@ -40,3 +40,15 @@ export interface InitSessionMessage {
   claude_session_id: string | null
 }
 
+export interface ClaudeAgentMessage {
+  _id?: string
+  session_id: string
+  sequence: number
+  role: 'user' | 'assistant'
+  content_blocks: Array<Record<string, any>>
+  created_at: string
+  duration_ms?: number
+  cost_usd?: number
+  input_tokens?: number
+  output_tokens?: number
+}

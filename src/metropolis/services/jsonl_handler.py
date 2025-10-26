@@ -2,9 +2,10 @@
 
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 from metropolis.db.session_store import SessionStore
+from metropolis.db.workspace_thread_store import WorkspaceThreadStore
 
 
 class JSONLHandler:
@@ -103,7 +104,9 @@ class JSONLHandler:
             for line in lines:
                 f.write(line + "\n")
 
-    async def persist_to_mongodb(self, session_id: str, session_store: SessionStore):
+    async def persist_to_mongodb(
+        self, session_id: str, session_store: Union[SessionStore, WorkspaceThreadStore]
+    ):
         """
         Read local JSONL file and save to MongoDB.
 
@@ -111,13 +114,15 @@ class JSONLHandler:
 
         Args:
             session_id: The Claude session ID
-            session_store: SessionStore instance for database operations
+            session_store: SessionStore or WorkspaceThreadStore instance
         """
         lines = self.read_jsonl_file(session_id)
         if lines:
             await session_store.save_jsonl_lines(session_id, lines)
 
-    async def restore_from_mongodb(self, session_id: str, session_store: SessionStore):
+    async def restore_from_mongodb(
+        self, session_id: str, session_store: Union[SessionStore, WorkspaceThreadStore]
+    ):
         """
         Read from MongoDB and write local JSONL file (overwrites existing).
 
@@ -126,7 +131,7 @@ class JSONLHandler:
 
         Args:
             session_id: The Claude session ID
-            session_store: SessionStore instance for database operations
+            session_store: SessionStore or WorkspaceThreadStore instance
         """
         lines = await session_store.get_jsonl_lines(session_id)
         if lines:

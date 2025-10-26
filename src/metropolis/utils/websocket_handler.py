@@ -4,11 +4,16 @@ from claude_agent_sdk import AssistantMessage, UserMessage
 from claude_agent_sdk.types import StreamEvent, ToolResultBlock, ToolUseBlock
 
 
-class WebSocketStreamHandler:
-    """Handler for streaming messages via WebSocket with JSON formatting."""
+class StreamHandler:
+    """
+    Handler for streaming messages via WebSocket or SSE with JSON formatting.
+
+    This handler processes Claude SDK messages and converts them to JSON format
+    suitable for both WebSocket and Server-Sent Events (SSE) streaming.
+    """
 
     def __init__(self):
-        """Initialize the WebSocket handler."""
+        """Initialize the stream handler."""
         self.last_message_type: str | None = None
 
     def process_message(self, message: Any) -> list[dict[str, Any]]:
@@ -118,3 +123,7 @@ class WebSocketStreamHandler:
     def reset(self) -> None:
         """Reset the handler state."""
         self.last_message_type = None
+
+
+# Backwards compatibility alias
+WebSocketStreamHandler = StreamHandler

@@ -7,6 +7,8 @@ from metropolis.config.settings import db_config
 from metropolis.db.session_store import SessionStore
 from metropolis.db.skill_store import SkillStore
 from metropolis.db.workflow_store import WorkflowStore
+from metropolis.db.workspace_store import WorkspaceStore
+from metropolis.db.workspace_thread_store import WorkspaceThreadStore
 from metropolis.routes.agent_routes import router as agent_router
 from metropolis.routes.session_routes import init_session_store
 from metropolis.routes.session_routes import router as session_router
@@ -14,6 +16,14 @@ from metropolis.routes.skill_routes import init_skill_store
 from metropolis.routes.skill_routes import router as skill_router
 from metropolis.routes.workflow_routes import init_workflow_store
 from metropolis.routes.workflow_routes import router as workflow_router
+from metropolis.routes.workspace_routes import (
+    init_skill_store as init_workspace_skill_store,
+)
+from metropolis.routes.workspace_routes import (
+    init_workspace_store,
+    init_workspace_thread_store,
+)
+from metropolis.routes.workspace_routes import router as workspace_router
 from metropolis.services.agent_manager import init_agent_manager
 from metropolis.services.agent_service import main_agent_option
 from metropolis.services.jsonl_handler import JSONLHandler
@@ -62,6 +72,25 @@ async def lifespan(app: FastAPI):
 
     init_workflow_skill_store(skill_store)
 
+    # Initialize MongoDB workspace store
+    workspace_store = WorkspaceStore(
+        mongodb_uri=db_config.uri, database_name=db_config.database
+    )
+    await workspace_store.create_indexes()
+    print("MongoDB workspace store initialized")
+
+    # Initialize MongoDB workspace thread store
+    workspace_thread_store = WorkspaceThreadStore(
+        mongodb_uri=db_config.uri, database_name=db_config.database
+    )
+    await workspace_thread_store.create_indexes()
+    print("MongoDB workspace thread store initialized")
+
+    # Initialize workspace store singletons
+    init_workspace_store(workspace_store)
+    init_workspace_thread_store(workspace_thread_store)
+    init_workspace_skill_store(skill_store)
+
     # Initialize JSONL handler
     jsonl_handler = JSONLHandler()
     print("JSONL handler initialized")
@@ -76,6 +105,8 @@ async def lifespan(app: FastAPI):
     await session_store.close()
     await skill_store.close()
     await workflow_store.close()
+    await workspace_store.close()
+    await workspace_thread_store.close()
     print("MongoDB connection closed")
 
 
@@ -108,6 +139,7 @@ app.include_router(agent_router, tags=["agent"])
 app.include_router(session_router)
 app.include_router(skill_router)
 app.include_router(workflow_router)
+app.include_router(workspace_router)
 
 
 @app.get("/")
@@ -121,6 +153,7 @@ async def root():
         "skills_api": "/api/skills",
         "workflows_api": "/api/workflows",
         "workflow_runs_api": "/api/workflow-runs",
+        "workspaces_api": "/api/workspaces",
     }
 
 

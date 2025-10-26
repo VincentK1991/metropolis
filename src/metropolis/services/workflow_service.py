@@ -13,7 +13,7 @@ from metropolis.db.skill_store import SkillStore
 from metropolis.db.workflow_store import WorkflowStore
 from metropolis.services.agent_service import get_workflow_agent_option
 from metropolis.utils.artifact_handler import copy_artifacts_from_temp_folder
-from metropolis.utils.websocket_handler import WebSocketStreamHandler
+from metropolis.utils.websocket_handler import StreamHandler
 
 
 class WorkflowService:
@@ -22,7 +22,7 @@ class WorkflowService:
     def __init__(self, skill_store: SkillStore, workflow_store: WorkflowStore):
         self.skill_store = skill_store
         self.workflow_store = workflow_store
-        self.websocket_handler = WebSocketStreamHandler()
+        self.stream_handler = StreamHandler()
 
     async def execute_workflow(
         self, skill_id: str, user_input: str, temp_path: Path
@@ -90,8 +90,8 @@ class WorkflowService:
 
                 # Stream responses
                 async for message in client.receive_response():
-                    # Convert message to WebSocket format for consistency
-                    ws_messages = self.websocket_handler.process_message(message)
+                    # Convert message to stream format for SSE
+                    ws_messages = self.stream_handler.process_message(message)
 
                     for ws_message in ws_messages:
                         # Stream to frontend (keep real-time streaming)
