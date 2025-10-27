@@ -11,6 +11,7 @@ from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKClient
 from metropolis.db.models import (
     MessageRole,
     SessionMetadata,
+    Workspace,
     WorkspaceMessage,
     WorkspaceThread,
 )
@@ -77,22 +78,18 @@ class WorkspaceService:
             ClaudeAgentOptions configured with workspace skills, or None if
             workspace not found
         """
-        workspace = await self.workspace_store.get_workspace(workspace_id)
+        workspace: Workspace | None = await self.workspace_store.get_workspace(
+            workspace_id
+        )
         if not workspace:
             return None
 
         # Load all workspace skills
-        skills_content = []
+        # skills_content = []
+        skills_text: str = ""
         for skill_id in workspace.skill_ids:
-            skill = await self.skill_store.get_skill(skill_id)
-            if skill:
-                skills_content.append(f"# {skill.title}\n\n{skill.content}\n\n---\n\n")
-
-        skills_text = (
-            "\n".join(skills_content)
-            if skills_content
-            else "No skills configured for this workspace."
-        )
+            skills_text += f" skill id: {skill_id}"
+        skills_text = f"You have access to the following skills: {skills_text}"
 
         # Build options with optional resume parameter
         options_dict = {
@@ -153,7 +150,9 @@ class WorkspaceService:
         """
         try:
             # Verify workspace exists
-            workspace = await self.workspace_store.get_workspace(workspace_id)
+            workspace: Workspace | None = await self.workspace_store.get_workspace(
+                workspace_id
+            )
             if not workspace:
                 error_event = {"type": "error", "error": "Workspace not found"}
                 yield f"data: {json.dumps(error_event)}\n\n"
@@ -165,7 +164,9 @@ class WorkspaceService:
             # Create or resume thread
             if thread_id and thread_id != "pending":
                 # Resume existing thread - look up by claude_session_id
-                thread = await self.workspace_thread_store.get_thread(thread_id)
+                thread: (
+                    WorkspaceThread | None
+                ) = await self.workspace_thread_store.get_thread(thread_id)
                 if not thread or thread.workspace_id != workspace_id:
                     error_event = {"type": "error", "error": "Thread not found"}
                     yield f"data: {json.dumps(error_event)}\n\n"
@@ -189,9 +190,9 @@ class WorkspaceService:
                 )
 
                 # Check if JSONL was restored
-                jsonl_lines = await self.workspace_thread_store.get_jsonl_lines(
-                    thread_id
-                )
+                jsonl_lines: list[
+                    str
+                ] = await self.workspace_thread_store.get_jsonl_lines(thread_id)
                 print(f"JSONL lines restored: {len(jsonl_lines)} lines")
 
                 # Verify JSONL file exists
@@ -200,7 +201,9 @@ class WorkspaceService:
                 print(f"JSONL file exists: {jsonl_file_path.exists()}")
 
                 # Get agent options with resume parameter (resume = claude_session_id)
-                options = await self.get_workspace_agent_options(
+                options: (
+                    ClaudeAgentOptions | None
+                ) = await self.get_workspace_agent_options(
                     workspace_id, env_folder, resume=thread_id
                 )
                 if not options:
@@ -214,7 +217,7 @@ class WorkspaceService:
                 # Create SDK client with resume option
                 async with ClaudeSDKClient(options=options) as client:
                     # Save user message first
-                    user_seq = await self.workspace_thread_store.get_next_sequence(
+                    user_seq: int = await self.workspace_thread_store.get_next_sequence(
                         thread_id
                     )
                     user_msg = WorkspaceMessage(
@@ -253,8 +256,8 @@ class WorkspaceService:
                     duration_ms = int(
                         (datetime.now(UTC) - start_time).total_seconds() * 1000
                     )
-                    assistant_seq = await self.workspace_thread_store.get_next_sequence(
-                        thread_id
+                    assistant_seq: int = (
+                        await self.workspace_thread_store.get_next_sequence(thread_id)
                     )
                     assistant_msg = WorkspaceMessage(
                         claude_session_id=thread_id,
@@ -276,10 +279,10 @@ class WorkspaceService:
                 )
 
                 # Check what was persisted
-                jsonl_lines = await self.workspace_thread_store.get_jsonl_lines(
-                    thread_id
-                )
-                print(f"JSONL lines persisted: {len(jsonl_lines)} lines")
+                jsonl_lines_after: list[
+                    str
+                ] = await self.workspace_thread_store.get_jsonl_lines(thread_id)
+                print(f"JSONL lines persisted: {len(jsonl_lines_after)} lines")
 
             else:
                 # Create new thread - generate execution_environment FIRST
@@ -292,10 +295,10 @@ class WorkspaceService:
                 print(f"Using folder: {env_folder}")
 
                 # Get options without resume (new thread)
-                options = await self.get_workspace_agent_options(
-                    workspace_id, env_folder
-                )
-                if not options:
+                options_new: (
+                    ClaudeAgentOptions | None
+                ) = await self.get_workspace_agent_options(workspace_id, env_folder)
+                if not options_new:
                     error_event = {
                         "type": "error",
                         "error": "Failed to configure agent",
@@ -303,7 +306,7 @@ class WorkspaceService:
                     yield f"data: {json.dumps(error_event)}\n\n"
                     return
 
-                async with ClaudeSDKClient(options=options) as client:
+                async with ClaudeSDKClient(options=options_new) as client:
                     # Send first message
                     await client.query(user_input)
 
@@ -407,10 +410,15 @@ class WorkspaceService:
                     )
 
                     # Verify what was saved
-                    jsonl_lines = await self.workspace_thread_store.get_jsonl_lines(
+                    jsonl_lines_new: list[
+                        str
+                    ] = await self.workspace_thread_store.get_jsonl_lines(
                         captured_session_id
                     )
-                    print(f"JSONL lines persisted to MongoDB: {len(jsonl_lines)} lines")
+                    print(
+                        f"JSONL lines persisted to MongoDB: "
+                        f"{len(jsonl_lines_new)} lines"
+                    )
 
             # Send completion event
             completion_event = {"type": "complete"}

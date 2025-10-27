@@ -2,8 +2,8 @@
 
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
 from metropolis.db.skill_store import SkillStore
@@ -12,6 +12,7 @@ from metropolis.db.workspace_thread_store import WorkspaceThreadStore
 from metropolis.dependencies.workspace_folder import (
     cleanup_execution_environment_folder,
 )
+from metropolis.services.file_service import FileService
 from metropolis.services.workspace_service import WorkspaceService
 
 router = APIRouter(prefix="/api", tags=["workspaces"])
@@ -20,6 +21,7 @@ router = APIRouter(prefix="/api", tags=["workspaces"])
 _workspace_store: WorkspaceStore | None = None
 _workspace_thread_store: WorkspaceThreadStore | None = None
 _skill_store: SkillStore | None = None
+_file_service: FileService | None = None
 
 
 def get_workspace_store() -> WorkspaceStore:
@@ -66,6 +68,20 @@ def init_skill_store(skill_store: SkillStore):
     """Initialize the global skill store instance."""
     global _skill_store
     _skill_store = skill_store
+
+
+def get_file_service() -> FileService:
+    """Get the global file service instance."""
+    global _file_service
+    if _file_service is None:
+        raise RuntimeError("FileService not initialized. Call init_file_service first.")
+    return _file_service
+
+
+def init_file_service(file_service: FileService):
+    """Initialize the global file service instance."""
+    global _file_service
+    _file_service = file_service
 
 
 class CreateWorkspaceRequest(BaseModel):
@@ -435,3 +451,100 @@ async def chat_in_workspace_thread(
             "Access-Control-Allow-Headers": "*",
         },
     )
+
+
+@router.post("/workspaces/{workspace_id}/threads/{thread_id}/files/upload")
+async def upload_file(
+    workspace_id: str,
+    thread_id: str,
+    file: UploadFile = File(...),
+):
+    """
+    Upload a file to the thread's execution environment.
+
+    Args:
+        workspace_id: The workspace ID
+        thread_id: The thread ID (claude_session_id)
+        file: File to upload
+
+    Returns:
+        Success status and file metadata
+    """
+    file_service = get_file_service()
+
+    try:
+        file_meta = await file_service.upload_file(workspace_id, thread_id, file)
+        return {"success": True, "file": file_meta.model_dump(by_alias=True)}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/workspaces/{workspace_id}/threads/{thread_id}/files")
+async def list_files(workspace_id: str, thread_id: str):
+    """
+    List all files in the thread's execution environment.
+
+    Args:
+        workspace_id: The workspace ID
+        thread_id: The thread ID (claude_session_id)
+
+    Returns:
+        List of files in execution environment
+    """
+    file_service = get_file_service()
+
+    try:
+        files = await file_service.list_files(workspace_id, thread_id)
+        return {"files": files}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@router.get("/workspaces/{workspace_id}/threads/{thread_id}/files/{filename}")
+async def download_file(workspace_id: str, thread_id: str, filename: str):
+    """
+    Download a file from the thread's execution environment.
+
+    Args:
+        workspace_id: The workspace ID
+        thread_id: The thread ID (claude_session_id)
+        filename: Filename to download
+
+    Returns:
+        File as download
+    """
+    file_service = get_file_service()
+
+    try:
+        file_path, mime_type = await file_service.download_file(
+            workspace_id, thread_id, filename
+        )
+        return FileResponse(path=file_path, media_type=mime_type, filename=filename)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@router.delete("/workspaces/{workspace_id}/threads/{thread_id}/files/{filename}")
+async def delete_file(workspace_id: str, thread_id: str, filename: str):
+    """
+    Delete a file from the thread's execution environment.
+
+    Args:
+        workspace_id: The workspace ID
+        thread_id: The thread ID (claude_session_id)
+        filename: Filename to delete
+
+    Returns:
+        Success status
+    """
+    file_service = get_file_service()
+
+    try:
+        await file_service.delete_file(workspace_id, thread_id, filename)
+        return {"success": True}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))

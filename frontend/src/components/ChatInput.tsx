@@ -1,13 +1,15 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, type ReactNode } from 'react'
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void
   placeholder?: string
+  leftActions?: ReactNode
 }
 
 export const ChatInput = ({
   onSendMessage,
-  placeholder = 'Type your message...'
+  placeholder = 'Type your message...',
+  leftActions,
 }: ChatInputProps) => {
   const [input, setInput] = useState('')
 
@@ -32,6 +34,9 @@ export const ChatInput = ({
   return (
     <form onSubmit={handleSubmit} className="p-4">
       <div className="flex gap-3 items-end">
+        {/* Left Actions (e.g., file upload button) */}
+        {leftActions && <div className="flex-shrink-0">{leftActions}</div>}
+
         {/* Text Input */}
         <div className="flex-1 relative">
           <textarea

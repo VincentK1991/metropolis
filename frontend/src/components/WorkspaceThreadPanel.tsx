@@ -8,7 +8,10 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { ChatMessage as ChatMessageComponent } from './ChatMessage'
 import { ChatInput } from './ChatInput'
 import { StreamingMessagePanel } from './StreamingMessagePanel'
+import { FileUploadButton } from './FileUploadButton'
+import { FileListPanel } from './FileListPanel'
 import { useWorkspaceThreadContext } from '../contexts/WorkspaceThreadContext'
+import { useFileList } from '../hooks/useFileList'
 import type { ChatMessage } from '../types/chat'
 
 // Wrapper to adapt ChatMessage component to StreamingMessagePanel's interface
@@ -29,12 +32,15 @@ export const WorkspaceThreadPanel = ({ workspaceId, threadId }: WorkspaceThreadP
     isLoadingHistory,
     error,
     sendMessage,
+    resetThread,
     setWorkspaceId,
     setThreadId,
     loadThreadHistory,
     setOnThreadCreated,
     threadId: currentThreadId,
   } = useWorkspaceThreadContext()
+
+  const { uploadFile, refreshFiles } = useFileList(workspaceId, threadId)
 
   // Set workspace and thread IDs when component mounts
   useEffect(() => {
@@ -45,6 +51,8 @@ export const WorkspaceThreadPanel = ({ workspaceId, threadId }: WorkspaceThreadP
       // Load thread history for existing threads
       loadThreadHistory(workspaceId, threadId)
     } else {
+      // Reset thread state for new/pending thread
+      resetThread()
       setThreadId(null)
 
       // Set up callback to navigate when thread is created
@@ -89,6 +97,9 @@ export const WorkspaceThreadPanel = ({ workspaceId, threadId }: WorkspaceThreadP
             </p>
           </div>
           <div className="flex items-center gap-2">
+            {/* File List Panel */}
+            <FileListPanel workspaceId={workspaceId} threadId={currentThreadId || threadId} />
+
             {/* Streaming Indicator */}
             {isStreaming && (
               <div className="flex items-center gap-2">
@@ -119,9 +130,29 @@ export const WorkspaceThreadPanel = ({ workspaceId, threadId }: WorkspaceThreadP
 
       {/* Chat Input */}
       <div className="border-t border-white/40 dark:border-deco-gold/20 backdrop-blur-md bg-amber/60 dark:bg-deco-navy-400/60">
+        {/* Streaming Indicator at Bottom */}
+        {isStreaming && (
+          <div className="px-4 pt-3 pb-2 flex items-center gap-3">
+            <div className="relative flex items-center justify-center">
+              <div className="w-6 h-6 border-4 border-nouveau-lavender-400 dark:border-deco-gold border-t-transparent rounded-full animate-spin" />
+            </div>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Agent is thinking and responding...
+            </span>
+          </div>
+        )}
+
         <ChatInput
           onSendMessage={handleSendMessage}
           placeholder="Type your message..."
+          leftActions={
+            <FileUploadButton
+              workspaceId={workspaceId}
+              threadId={currentThreadId || threadId}
+              onUpload={uploadFile}
+              onUploadComplete={refreshFiles}
+            />
+          }
         />
       </div>
     </div>

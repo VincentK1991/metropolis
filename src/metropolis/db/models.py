@@ -166,6 +166,20 @@ class Workspace(BaseModel):
         populate_by_name = True
 
 
+class FileMetadata(BaseModel):
+    """Embedded document for file metadata in WorkspaceThread."""
+
+    filename: str = Field(..., description="Original filename")
+    file_size: int = Field(..., description="File size in bytes")
+    file_type: str = Field(..., description="File extension (pptx, csv, etc)")
+    mime_type: str = Field(..., description="MIME type")
+    uploaded_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    uploaded_by: Optional[str] = Field(default=None, description="User ID (future)")
+
+    class Config:
+        populate_by_name = True
+
+
 class WorkspaceThread(BaseModel):
     """
     Represents a workspace thread (conversation session).
@@ -195,6 +209,11 @@ class WorkspaceThread(BaseModel):
     )
     total_input_tokens: int = Field(default=0, description="Total input tokens used")
     total_output_tokens: int = Field(default=0, description="Total output tokens used")
+
+    # File uploads
+    files: List["FileMetadata"] = Field(
+        default_factory=list, description="Uploaded files metadata (embedded)"
+    )
 
     class Config:
         populate_by_name = True

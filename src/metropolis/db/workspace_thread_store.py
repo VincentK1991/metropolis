@@ -5,7 +5,7 @@ from typing import Optional
 
 from pymongo import ASCENDING, DESCENDING, AsyncMongoClient
 
-from .models import WorkspaceMessage, WorkspaceThread
+from .models import FileMetadata, WorkspaceMessage, WorkspaceThread
 
 
 class WorkspaceThreadStore:
@@ -306,6 +306,83 @@ class WorkspaceThreadStore:
             claude_session_id: The Claude session ID
         """
         await self.jsonl_lines.delete_many({"claude_session_id": claude_session_id})
+
+    async def add_file_metadata(
+        self, claude_session_id: str, file_meta: FileMetadata
+    ) -> bool:
+        """
+        Add file metadata to thread's files array.
+
+        Args:
+            claude_session_id: The Claude session ID
+            file_meta: FileMetadata object to add
+
+        Returns:
+            True if file was added, False otherwise
+        """
+        result = await self.threads.update_one(
+            {"claude_session_id": claude_session_id},
+            {
+                "$push": {"files": file_meta.model_dump(by_alias=True)},
+                "$set": {"updated_at": datetime.now(UTC)},
+            },
+        )
+        return result.modified_count > 0
+
+    async def remove_file_metadata(self, claude_session_id: str, filename: str) -> bool:
+        """
+        Remove file metadata from thread's files array.
+
+        Args:
+            claude_session_id: The Claude session ID
+            filename: Filename to remove
+
+        Returns:
+            True if file was removed, False otherwise
+        """
+        result = await self.threads.update_one(
+            {"claude_session_id": claude_session_id},
+            {
+                "$pull": {"files": {"filename": filename}},
+                "$set": {"updated_at": datetime.now(UTC)},
+            },
+        )
+        return result.modified_count > 0
+
+    async def get_file_metadata(
+        self, claude_session_id: str, filename: str
+    ) -> Optional[FileMetadata]:
+        """
+        Get specific file metadata from thread.
+
+        Args:
+            claude_session_id: The Claude session ID
+            filename: Filename to get metadata for
+
+        Returns:
+            FileMetadata if found, None otherwise
+        """
+        thread: WorkspaceThread | None = await self.get_thread(claude_session_id)
+        if not thread:
+            return None
+
+        for file_meta in thread.files:
+            if file_meta.filename == filename:
+                return file_meta
+        return None
+
+    async def list_file_metadata(self, claude_session_id: str) -> list[FileMetadata]:
+        """
+        Get all file metadata for a thread.
+
+        Args:
+            claude_session_id: The Claude session ID
+
+        Returns:
+            List of FileMetadata objects
+        """
+        thread: WorkspaceThread | None = await self.get_thread(claude_session_id)
+        return thread.files if thread else []
 
     async def close(self):
         """Close the MongoDB connection."""

@@ -17,15 +17,17 @@ from metropolis.routes.skill_routes import router as skill_router
 from metropolis.routes.workflow_routes import init_workflow_store
 from metropolis.routes.workflow_routes import router as workflow_router
 from metropolis.routes.workspace_routes import (
-    init_skill_store as init_workspace_skill_store,
-)
-from metropolis.routes.workspace_routes import (
+    init_file_service,
     init_workspace_store,
     init_workspace_thread_store,
+)
+from metropolis.routes.workspace_routes import (
+    init_skill_store as init_workspace_skill_store,
 )
 from metropolis.routes.workspace_routes import router as workspace_router
 from metropolis.services.agent_manager import init_agent_manager
 from metropolis.services.agent_service import main_agent_option
+from metropolis.services.file_service import FileService
 from metropolis.services.jsonl_handler import JSONLHandler
 
 
@@ -90,6 +92,11 @@ async def lifespan(app: FastAPI):
     init_workspace_store(workspace_store)
     init_workspace_thread_store(workspace_thread_store)
     init_workspace_skill_store(skill_store)
+
+    # Initialize file service
+    file_service = FileService(workspace_thread_store)
+    init_file_service(file_service)
+    print("File service initialized")
 
     # Initialize JSONL handler
     jsonl_handler = JSONLHandler()
