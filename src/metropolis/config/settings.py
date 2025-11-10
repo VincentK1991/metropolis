@@ -1,13 +1,15 @@
 """Application configuration settings."""
 
+import os
+
 from pydantic import BaseModel
 
 
 class DatabaseConfig(BaseModel):
     """MongoDB configuration."""
 
-    uri: str = "mongodb://user:test1234@localhost:27017/"
-    database: str = "agent_sessions"
+    uri: str = os.getenv("MONGODB_URI", "mongodb://user:test1234@localhost:27017/")
+    database: str = os.getenv("MONGODB_DATABASE", "agent_sessions")
 
 
 class SessionConfig(BaseModel):

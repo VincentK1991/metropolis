@@ -1,6 +1,16 @@
 import type { WebSocketMessage } from '../types/chat'
 
-const WS_BASE_URL = 'ws://localhost:8088'
+// Get WebSocket base URL from environment variable, with fallback for development
+// Convert http:// to ws:// or https:// to wss://
+const getWebSocketUrl = () => {
+  const wsUrl = import.meta.env.VITE_WS_BASE_URL;
+  const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8088';
+  // Use VITE_WS_BASE_URL if set and non-empty, otherwise derive from API URL
+  const baseUrl = (wsUrl && wsUrl.trim()) ? wsUrl : apiUrl;
+  return baseUrl.replace(/^http/, 'ws');
+};
+
+const WS_BASE_URL = getWebSocketUrl();
 
 export class AgentWebSocketService {
   private ws: WebSocket | null = null
