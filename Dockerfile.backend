@@ -1,0 +1,43 @@
+# Backend Dockerfile for Metropolis FastAPI application
+FROM python:3.12-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependency files
+COPY pyproject.toml ./
+
+# Install Python dependencies using pip
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir .
+
+# Copy source code
+COPY src/ ./src/
+
+# Set PYTHONPATH to include src directory
+ENV PYTHONPATH=/app/src
+
+# Create non-root user for security
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Expose port 8088
+EXPOSE 8088
+
+# Environment variables for MongoDB (with defaults)
+ENV MONGODB_URI=mongodb://user:test1234@localhost:27017/
+ENV MONGODB_DATABASE=agent_sessions
+
+# CORS configuration (comma-separated list of allowed origins)
+# Example: "http://localhost:3000,http://localhost:5173,https://example.com"
+# If not set, defaults to localhost development origins
+ENV CORS_ORIGINS=
+
+# Run the application
+CMD ["uvicorn", "metropolis.app:app", "--host", "0.0.0.0", "--port", "8088"]
+

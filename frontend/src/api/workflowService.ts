@@ -102,7 +102,8 @@ export const workflowService = {
     skillId: string,
     userInput: string
   ): AsyncGenerator<WorkflowExecutionEvent, void, unknown> {
-    const response = await fetch(`http://localhost:8088/api/workflows/${skillId}/execute`, {
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8088';
+    const response = await fetch(`${apiBaseUrl}/api/workflows/${skillId}/execute`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

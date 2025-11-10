@@ -1,7 +1,8 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 
-const API_BASE_URL = 'http://localhost:8088';
+// Get API base URL from environment variable, with fallback for development
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8088';
 
 // Create base axios instance
 export const api = axios.create({

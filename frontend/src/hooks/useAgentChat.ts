@@ -49,7 +49,8 @@ export const useAgentChat = (): UseAgentChatResult => {
 
   const loadAvailableSessions = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8088/api/sessions')
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8088';
+      const response = await fetch(`${apiBaseUrl}/api/sessions`)
       const data = await response.json()
       setAvailableSessions(data.sessions || [])
     } catch (err) {
