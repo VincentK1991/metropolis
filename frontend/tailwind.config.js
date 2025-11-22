@@ -24,7 +24,27 @@ module.exports = {
         ],
       },
       colors: {
-        // Art Nouveau - Light Mode Pastels (More Vibrant)
+        // Liquid Glass - Light Mode
+        'glass-light': {
+          base: 'rgba(255, 255, 255, 0.1)',
+          surface: 'rgba(255, 255, 255, 0.15)',
+          border: 'rgba(255, 255, 255, 0.25)',
+          text: '#1a1a1a',
+          textSecondary: '#4a4a4a',
+          accent: 'rgba(100, 150, 255, 0.3)',
+          accentStrong: 'rgba(100, 150, 255, 0.5)',
+        },
+        // Liquid Glass - Dark Mode
+        'glass-dark': {
+          base: 'rgba(0, 0, 0, 0.25)',
+          surface: 'rgba(20, 20, 30, 0.35)',
+          border: 'rgba(255, 255, 255, 0.12)',
+          text: '#f5f5f5',
+          textSecondary: '#d0d0d0',
+          accent: 'rgba(150, 120, 255, 0.3)',
+          accentStrong: 'rgba(150, 120, 255, 0.5)',
+        },
+        // Legacy color mappings for gradual migration (will be replaced in components)
         'nouveau-rose': {
           50: '#fff0f5',
           100: '#ffd6e8',
@@ -70,7 +90,6 @@ module.exports = {
           500: '#1fd4b0',
           DEFAULT: '#99ffe0',
         },
-        // Art Deco - Dark Mode Rich Colors
         'deco-gold': {
           50: '#fdf9f0',
           100: '#fbf3e0',
@@ -117,10 +136,6 @@ module.exports = {
           DEFAULT: '#c0c0c0',
         },
       },
-      backgroundImage: {
-        'nouveau-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0c8.284 0 15 6.716 15 15 0 8.284-6.716 15-15 15-8.284 0-15-6.716-15-15C15 6.716 21.716 0 30 0zm0 3c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12S36.627 3 30 3z' fill='%23e1d7ef' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E\")",
-        'deco-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30L0 30 30 0zm0 6.708L6.708 30 30 53.292 53.292 30 30 6.708z' fill='%23d4a037' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E\")",
-      },
       backdropBlur: {
         xs: '2px',
         sm: '4px',
@@ -129,12 +144,20 @@ module.exports = {
         xl: '16px',
         '2xl': '20px',
         '3xl': '24px',
+        '4xl': '32px',
+        '5xl': '40px',
       },
       backdropSaturate: {
         120: '1.2',
         150: '1.5',
         180: '1.8',
         200: '2',
+      },
+      opacity: {
+        'glass-light': '0.1',
+        'glass-medium': '0.15',
+        'glass-strong': '0.25',
+        'glass-border': '0.2',
       },
     },
   },

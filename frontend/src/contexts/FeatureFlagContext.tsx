@@ -4,6 +4,8 @@ export interface FeatureFlags {
   enableChatPage: boolean
   enableWorkflow: boolean
   enableSkills: boolean
+  enableAgentV2: boolean
+  enableLegacyHome: boolean
 }
 
 interface FeatureFlagContextType {
@@ -16,6 +18,8 @@ const defaultFlags: FeatureFlags = {
   enableChatPage: false, // Hidden by default (WebSocket not production ready)
   enableWorkflow: true, // Visible by default
   enableSkills: true, // Visible by default
+  enableAgentV2: true, // Visible by default (new default agent)
+  enableLegacyHome: false, // Hidden by default (legacy agent v1 workspace page)
 }
 
 const STORAGE_KEY = 'metropolis-feature-flags'

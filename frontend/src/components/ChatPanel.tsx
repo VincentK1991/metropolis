@@ -21,11 +21,9 @@ export const ChatPanel = () => {
   }
 
   return (
-    <div className="flex flex-col h-full backdrop-blur-xl bg-amber/70 dark:bg-deco-navy-500/70 backdrop-saturate-150 overflow-hidden border-l border-white/40 dark:border-deco-gold/30 transition-all duration-300 shadow-xl dark:shadow-2xl">
+    <div className="flex flex-col h-full glass-chat-panel-light dark:glass-chat-panel-dark overflow-hidden border-l border-white/20 dark:border-white/10 transition-all duration-300 shadow-xl">
       {/* Chat Header */}
-      <div className="px-6 py-4 backdrop-blur-lg bg-gradient-to-r from-nouveau-lavender-300/60 via-nouveau-rose-300/50 to-nouveau-mint-300/60 dark:from-deco-navy-400/80 dark:via-deco-burgundy-400/70 dark:to-deco-emerald-500/80 text-gray-800 dark:text-nouveau-cream relative border-b border-white/40 dark:border-deco-gold/20">
-        {/* Decorative top border - Glass edge */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-nouveau-rose-400/70 via-nouveau-lavender-400/70 to-nouveau-sage-400/70 dark:from-deco-gold/60 dark:via-deco-emerald/60 dark:to-deco-gold/60" />
+      <div className="px-6 py-4 glass-light dark:glass-dark text-gray-800 dark:text-gray-100 relative border-b border-white/20 dark:border-white/10">
 
         <div className="flex items-center justify-between">
           <div>
@@ -44,7 +42,7 @@ export const ChatPanel = () => {
             <div className="flex items-center gap-2">
               <div
                 className={`w-2 h-2 rounded-full ${
-                  isConnected ? 'bg-nouveau-sage-400 dark:bg-deco-emerald' : 'bg-red-400'
+                  isConnected ? 'bg-green-400 dark:bg-green-500' : 'bg-red-400'
                 } animate-pulse`}
               />
               <span className="text-xs text-gray-700 dark:text-gray-300">
@@ -54,7 +52,7 @@ export const ChatPanel = () => {
             {/* Streaming Indicator */}
             {isStreaming && (
               <div className="flex items-center gap-2 ml-4">
-                <div className="w-2 h-2 rounded-full bg-yellow-400 dark:bg-deco-gold animate-pulse" />
+                <div className="w-2 h-2 rounded-full bg-yellow-400 dark:bg-yellow-500 animate-pulse" />
                 <span className="text-xs text-gray-700 dark:text-gray-300">Streaming...</span>
               </div>
             )}
@@ -71,7 +69,7 @@ export const ChatPanel = () => {
       />
 
       {/* Chat Input */}
-      <div className="border-t border-white/40 dark:border-deco-gold/20 backdrop-blur-md bg-amber/60 dark:bg-deco-navy-400/60">
+      <div className="border-t border-white/20 dark:border-white/10 glass-chat-panel-light dark:glass-chat-panel-dark">
         <ChatInput
           onSendMessage={handleSendMessage}
           placeholder={

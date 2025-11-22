@@ -65,10 +65,21 @@ class AgentService:
 
         options = ClaudeAgentOptions(
             include_partial_messages=True,
-            model="claude-sonnet-4-5",
+            model="claude-haiku-4-5",
             max_turns=100,
+            setting_sources=["user", "project"],
             permission_mode="bypassPermissions",
             cwd=WORKING_DIR,
+            system_prompt={
+                "type": "preset",
+                "preset": "claude_code",
+                "append": f"""
+            always work within the working directory {WORKING_DIR}
+            do not work outside of this working directory.
+            if a task requires running python code and python library is required
+            use uv as package manager to install python library.
+            """,
+            },
             env={
                 "MAX_THINKING_TOKENS": "4000",
             },
@@ -98,7 +109,10 @@ class AgentService:
         )
 
         options = self._get_agent_options(session_id)
-        captured_session_id: Optional[str] = None
+        # If resuming, we already know the session_id, so set it upfront
+        # If new session, we'll capture it from the first message
+        captured_session_id: Optional[str] = session_id
+        is_new_session = session_id is None
         message_count = 0
         event_count = 0
 
@@ -112,13 +126,13 @@ class AgentService:
                 # Stream responses
                 async for message in client.receive_response():
                     message_count += 1
-                    # Try to capture session ID from message
-                    if captured_session_id is None:
+                    # Only capture session ID and send session_created for new sessions
+                    if is_new_session and captured_session_id is None:
                         extracted_id = self.extract_session_id_from_message(message)
                         if extracted_id:
                             captured_session_id = extracted_id
                             logger.info(f"Captured session ID: {captured_session_id}")
-                            # Send session_created event
+                            # Send session_created event only for new sessions
                             session_event = {
                                 "type": "session_created",
                                 "session_id": captured_session_id,

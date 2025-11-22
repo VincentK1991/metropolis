@@ -5,12 +5,21 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from metropolis.config.settings import db_config
+from metropolis.db.containerized_agent_store import ContainerizedAgentStore
 from metropolis.db.session_store import SessionStore
 from metropolis.db.skill_store import SkillStore
 from metropolis.db.workflow_store import WorkflowStore
 from metropolis.db.workspace_store import WorkspaceStore
 from metropolis.db.workspace_thread_store import WorkspaceThreadStore
 from metropolis.routes.agent_routes import router as agent_router
+from metropolis.routes.agent_v2_file_routes import (
+    init_file_service as init_v2_file_service,
+)
+from metropolis.routes.agent_v2_file_routes import router as agent_v2_file_router
+from metropolis.routes.agent_v2_routes import (
+    init_agent_service as init_v2_agent_service,
+)
+from metropolis.routes.agent_v2_routes import router as agent_v2_router
 from metropolis.routes.session_routes import init_session_store
 from metropolis.routes.session_routes import router as session_router
 from metropolis.routes.skill_routes import init_skill_store
@@ -28,6 +37,8 @@ from metropolis.routes.workspace_routes import (
 from metropolis.routes.workspace_routes import router as workspace_router
 from metropolis.services.agent_manager import init_agent_manager
 from metropolis.services.agent_service import main_agent_option
+from metropolis.services.containerized_agent_service import ContainerizedAgentService
+from metropolis.services.containerized_file_service import ContainerizedFileService
 from metropolis.services.file_service import FileService
 from metropolis.services.jsonl_handler import JSONLHandler
 
@@ -106,6 +117,23 @@ async def lifespan(app: FastAPI):
     init_agent_manager(session_store, main_agent_option, jsonl_handler)
     print("Agent manager initialized")
 
+    # Initialize MongoDB containerized agent store
+    containerized_agent_store = ContainerizedAgentStore(
+        mongodb_uri=db_config.uri, database_name=db_config.database
+    )
+    await containerized_agent_store.create_indexes()
+    print("MongoDB containerized agent store initialized")
+
+    # Initialize containerized agent service
+    containerized_agent_service = ContainerizedAgentService(containerized_agent_store)
+    init_v2_agent_service(containerized_agent_service, containerized_agent_store)
+    print("Containerized agent service initialized")
+
+    # Initialize containerized file service
+    containerized_file_service = ContainerizedFileService()
+    init_v2_file_service(containerized_file_service)
+    print("Containerized file service initialized")
+
     yield
 
     # Shutdown
@@ -115,6 +143,7 @@ async def lifespan(app: FastAPI):
     await workflow_store.close()
     await workspace_store.close()
     await workspace_thread_store.close()
+    await containerized_agent_store.close()
     print("MongoDB connection closed")
 
 
@@ -159,6 +188,8 @@ app.include_router(session_router)
 app.include_router(skill_router)
 app.include_router(workflow_router)
 app.include_router(workspace_router)
+app.include_router(agent_v2_router)
+app.include_router(agent_v2_file_router)
 
 
 @app.get("/")
@@ -173,6 +204,8 @@ async def root():
         "workflows_api": "/api/workflows",
         "workflow_runs_api": "/api/workflow-runs",
         "workspaces_api": "/api/workspaces",
+        "agent_v2_api": "/api/v2/agent",
+        "agent_v2_files_api": "/api/v2/agent/files",
     }
 
 

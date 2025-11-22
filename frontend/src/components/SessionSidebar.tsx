@@ -38,11 +38,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
   }
 
   return (
-    <div className="w-64 h-full backdrop-blur-xl bg-amber/60 dark:bg-deco-navy-500/60 backdrop-saturate-150 border-r border-white/30 dark:border-deco-gold/25 flex flex-col overflow-hidden flex-shrink-0 transition-all duration-300 shadow-xl">
+    <div className="w-64 h-full glass-chat-panel-light dark:glass-chat-panel-dark border-r border-white/20 dark:border-white/10 flex flex-col overflow-hidden flex-shrink-0 transition-all duration-300 shadow-xl">
       {/* Header */}
-      <div className="p-4 border-b border-white/30 dark:border-deco-gold/20">
+      <div className="p-4 border-b border-white/20 dark:border-white/10">
         <button
-          className="w-full px-4 py-3 backdrop-blur-md bg-gradient-to-br from-nouveau-lavender-300/70 to-nouveau-rose-300/70 dark:from-deco-emerald/80 dark:to-deco-gold/80 text-gray-900 dark:text-white border border-white/60 dark:border-deco-gold/40 rounded-2xl dark:rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none shadow-lg"
+          className="glass-button w-full px-4 py-3 rounded-xl text-gray-900 dark:text-gray-100 text-sm font-semibold cursor-pointer transition-all duration-200 hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
           onClick={onNewSession}
           disabled={isLoading}
         >
@@ -51,7 +51,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
       </div>
 
       {/* Session List */}
-      <div className="flex-1 overflow-y-auto p-2 nouveau-scrollbar deco-scrollbar">
+      <div className="flex-1 overflow-y-auto p-2 glass-scrollbar">
         <h3 className="text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mx-2 my-2 tracking-wider">
           Recent Sessions
         </h3>
@@ -68,10 +68,10 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
           availableSessions.map((session) => (
             <div
               key={session.claude_session_id}
-              className={`p-3 mx-1 mb-1 rounded-xl dark:rounded-lg cursor-pointer transition-all duration-200 ${
+              className={`p-3 mx-1 mb-1 rounded-xl cursor-pointer transition-all duration-200 ${
                 session.claude_session_id === sessionId
-                  ? 'backdrop-blur-md bg-gradient-to-br from-nouveau-lavender-300/85 to-nouveau-rose-300/85 dark:from-deco-burgundy/90 dark:to-deco-emerald/90 border border-white/70 dark:border-deco-gold/50 text-gray-900 dark:text-white shadow-lg'
-                  : 'backdrop-blur-sm bg-amber/40 dark:bg-deco-navy-400/40 border border-white/30 dark:border-deco-silver/20 text-gray-800 dark:text-gray-200 hover:bg-amber/60 dark:hover:bg-deco-navy-300/60 hover:border-white/50 dark:hover:border-deco-gold/30 shadow-md'
+                  ? 'glass-card text-gray-900 dark:text-gray-100 shadow-lg'
+                  : 'glass-light dark:glass-dark text-gray-800 dark:text-gray-200 hover:shadow-md'
               }`}
               onClick={() => onSelectSession(session.claude_session_id)}
             >

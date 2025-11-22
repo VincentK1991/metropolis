@@ -21,12 +21,22 @@ export const FeatureFlagPanel: React.FC = () => {
       label: 'Enable Workflow',
       description: 'Shows the Workflow tab in navigation',
     },
+    {
+      flag: 'enableAgentV2' as const,
+      label: 'Enable Agent V2',
+      description: 'Shows the Agent V2 chat panel (containerized agent)',
+    },
+    {
+      flag: 'enableLegacyHome' as const,
+      label: 'Enable Legacy Home',
+      description: 'Shows the legacy workspace page (Agent V1)',
+    },
   ]
 
   return (
     <div className="w-80 max-h-96 overflow-y-auto">
-      <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-nouveau-cream">
+      <div className="px-4 py-3 border-b border-white/20 dark:border-white/10">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           Feature Flags
         </h3>
         <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">

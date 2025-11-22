@@ -5,8 +5,7 @@
 /* CSS Custom Properties for Theme */
 @layer base {
   :root {
-    --nouveau-curve-radius: 1rem;
-    --deco-angle: 0.25rem;
+    --glass-radius: 1rem;
     --transition-speed: 300ms;
   }
 
@@ -33,88 +32,208 @@
   }
 }
 
-/* Liquid Glass Effects */
+/* Liquid Glass Effects - Enhanced Frosted Glass Style */
 @layer components {
+  /* Base glass effect for light mode - More transparent with stronger blur */
   .glass-light {
-    background: rgba(255, 252, 245, 0.75);
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow:
-      0 8px 32px 0 rgba(161, 145, 207, 0.1),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+      0 8px 32px 0 rgba(0, 0, 0, 0.12),
+      0 2px 8px 0 rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 
+  /* Base glass effect for dark mode - Highly transparent with stronger blur */
   .glass-dark {
-    background: rgba(26, 58, 82, 0.7);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(212, 160, 55, 0.25);
+    background: rgba(0, 0, 0, 0.01);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow:
-      0 8px 32px 0 rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 0 rgba(212, 160, 55, 0.2);
+      0 8px 32px 0 rgba(0, 0, 0, 0.15),
+      0 2px 8px 0 rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.02);
   }
 
+  /* Panel glass - lighter variant with enhanced depth */
   .glass-panel-light {
-    background: rgba(255, 245, 224, 0.65);
-    backdrop-filter: blur(10px) saturate(150%);
-    -webkit-backdrop-filter: blur(10px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 16px 0 rgba(161, 145, 207, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 4px 16px 0 rgba(0, 0, 0, 0.1),
+      0 1px 4px 0 rgba(0, 0, 0, 0.06),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.05);
   }
 
   .glass-panel-dark {
-    background: rgba(26, 58, 82, 0.65);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    border: 1px solid rgba(212, 160, 55, 0.2);
-    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.25);
+    background: rgba(240, 245, 255, 0.01);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow:
+      0 4px 16px 0 rgba(0, 0, 0, 0.12),
+      0 1px 4px 0 rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.08);
   }
 
-  .glass-message-user {
-    background: linear-gradient(135deg, rgba(207, 179, 255, 0.8), rgba(255, 179, 214, 0.8));
-    backdrop-filter: blur(10px) saturate(150%);
-    -webkit-backdrop-filter: blur(10px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+  /* Chat panel - no blur, transparent background for visible gaps between messages */
+  .glass-chat-panel-light {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow:
-      0 4px 16px rgba(184, 141, 255, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      0 4px 16px 0 rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-chat-panel-dark {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow:
+      0 4px 16px 0 rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
+  }
+
+  /* Message bubbles - Enhanced transparency and depth */
+  .glass-message-user {
+    background: rgba(100, 150, 255, 0.022);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow:
+      0 8px 24px rgba(100, 150, 255, 0.15),
+      0 4px 12px rgba(100, 150, 255, 0.1),
+      0 2px 6px rgba(100, 150, 255, 0.08),
+      inset 0 2px 4px rgba(255, 255, 255, 0.4),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   }
 
   .dark .glass-message-user {
-    background: linear-gradient(135deg, rgba(45, 122, 95, 0.85), rgba(212, 160, 55, 0.85));
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    border: 1px solid rgba(212, 160, 55, 0.4);
+    background: rgba(135, 180, 255, 0.03);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow:
-      0 4px 16px rgba(45, 122, 95, 0.3),
-      inset 0 1px 0 rgba(212, 160, 55, 0.3);
+      0 4px 16px rgba(135, 180, 255, 0.06),
+      0 2px 8px rgba(135, 180, 255, 0.03),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
   }
 
   .glass-message-assistant {
-    background: rgba(246, 225, 177, 0.85);
-    backdrop-filter: blur(8px) saturate(160%);
-    -webkit-backdrop-filter: blur(8px) saturate(160%);
-    border: 1px solid rgba(168, 223, 196, 0.5);
+    background: rgba(255, 255, 255, 0.015);
+    backdrop-filter: blur(17px) saturate(180%);
+    -webkit-backdrop-filter: blur(17px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow:
-      0 4px 12px rgba(168, 223, 196, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      0 6px 20px rgba(0, 0, 0, 0.08),
+      0 3px 10px rgba(0, 0, 0, 0.06),
+      0 1px 4px rgba(0, 0, 0, 0.04),
+      inset 0 2px 4px rgba(255, 255, 255, 0.35),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.15);
   }
 
   .dark .glass-message-assistant {
-    background: rgba(13, 42, 64, 0.75);
-    backdrop-filter: blur(10px) saturate(140%);
-    -webkit-backdrop-filter: blur(10px) saturate(140%);
-    border: 1px solid rgba(138, 155, 168, 0.3);
+    background: rgba(245, 248, 255, 0.01);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.04);
     box-shadow:
-      0 4px 12px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(138, 155, 168, 0.2);
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      0 1px 4px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  /* Glass card variant - Enhanced with more depth */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--glass-radius);
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.12),
+      0 4px 16px 0 rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .dark .glass-card {
+    background: rgba(0, 0, 0, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.15),
+      0 4px 16px 0 rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  }
+
+  /* Glass button variant - Enhanced transparency and depth */
+  .glass-button {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      0 2px 6px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+  }
+
+  .glass-button:hover {
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.15),
+      0 3px 10px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .dark .glass-button {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.12),
+      0 2px 6px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .dark .glass-button:hover {
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.15),
+      0 3px 10px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   }
 
   /* Glass shimmer animation */
   @keyframes glass-shimmer {
     0% { background-position: -200% center; }
     100% { background-position: 200% center; }
+  }
+
+  .glass-shimmer {
+    position: relative;
+    overflow: hidden;
   }
 
   .glass-shimmer::after {
@@ -127,177 +246,77 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.15) 50%,
       transparent 100%
     );
     background-size: 200% 100%;
-    animation: glass-shimmer 3s linear infinite;
+    animation: glass-shimmer 4s linear infinite;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .glass-shimmer:hover::after {
+    opacity: 1;
   }
 }
 
-/* Art Nouveau Decorative Elements - Light Mode */
+/* Liquid Glass Scrollbars - Enhanced with more transparency and depth */
 @layer components {
-  .nouveau-border {
-    border-radius: var(--nouveau-curve-radius);
-    border: 3px solid theme('colors.nouveau-lavender.300');
-    box-shadow: 0 4px 12px rgba(161, 145, 207, 0.25);
+  /* Light mode scrollbar - More visible */
+  .glass-scrollbar::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+    -webkit-appearance: none;
   }
 
-  .nouveau-card {
-    @apply nouveau-border bg-amber;
-    position: relative;
-    overflow: hidden;
+  .glass-scrollbar::-webkit-scrollbar-track {
+    background: rgba(220, 220, 220, 0.4);
+    border-radius: 7px;
+    border: 1px solid rgba(180, 180, 180, 0.5);
   }
 
-  .nouveau-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(
-      90deg,
-      theme('colors.nouveau-rose.300') 0%,
-      theme('colors.nouveau-lavender.300') 50%,
-      theme('colors.nouveau-mint.300') 100%
-    );
-    opacity: 0.9;
+  .glass-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(120, 120, 120, 0.8);
+    border-radius: 7px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3);
   }
 
-  /* Art Nouveau curved scrollbar for light mode - Glass effect */
-  .nouveau-scrollbar::-webkit-scrollbar {
-    width: 10px;
+  .glass-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 100, 100, 0.9);
+    border-color: rgba(255, 255, 255, 1);
   }
 
-  .nouveau-scrollbar::-webkit-scrollbar-track {
-    background: rgba(255, 245, 224, 0.3);
-    border-radius: 10px;
+  /* Dark mode scrollbar - More visible */
+  .dark .glass-scrollbar::-webkit-scrollbar-track {
+    background: rgba(60, 60, 60, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
 
-  .nouveau-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-      180deg,
-      rgba(207, 179, 255, 0.7),
-      rgba(255, 141, 196, 0.7)
-    );
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+  .dark .glass-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(200, 200, 200, 0.7);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.5);
   }
 
-  .nouveau-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(
-      180deg,
-      rgba(207, 179, 255, 0.9),
-      rgba(255, 141, 196, 0.9)
-    );
-  }
-}
-
-/* Art Deco Decorative Elements - Dark Mode */
-@layer components {
-  .deco-border {
-    border-radius: var(--deco-angle);
-    border: 2px solid theme('colors.deco-gold.500');
-    box-shadow: 0 4px 12px rgba(212, 160, 55, 0.2);
+  .dark .glass-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(220, 220, 220, 0.85);
+    border-color: rgba(255, 255, 255, 0.7);
   }
 
-  .deco-card {
-    @apply deco-border;
-    background: linear-gradient(
-      135deg,
-      theme('colors.deco-navy.500') 0%,
-      theme('colors.deco-navy.400') 100%
-    );
-    position: relative;
-    overflow: hidden;
+  /* Firefox scrollbar */
+  .glass-scrollbar {
+    scrollbar-width: auto;
+    scrollbar-color: rgba(120, 120, 120, 0.8) rgba(220, 220, 220, 0.4);
   }
 
-  .deco-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(
-      90deg,
-      theme('colors.deco-gold.400') 0%,
-      theme('colors.deco-emerald.400') 50%,
-      theme('colors.deco-gold.400') 100%
-    );
-  }
-
-  .deco-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(
-      90deg,
-      theme('colors.deco-gold.400') 0%,
-      theme('colors.deco-burgundy.400') 50%,
-      theme('colors.deco-gold.400') 100%
-    );
-  }
-
-  /* Art Deco geometric scrollbar for dark mode - Glass effect */
-  .dark .deco-scrollbar::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  .dark .deco-scrollbar::-webkit-scrollbar-track {
-    background: rgba(26, 58, 82, 0.3);
-    border-radius: 2px;
-  }
-
-  .dark .deco-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(
-      180deg,
-      rgba(212, 160, 55, 0.8),
-      rgba(45, 122, 95, 0.8)
-    );
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border-radius: 2px;
-    border: 1px solid rgba(212, 160, 55, 0.3);
-  }
-
-  .dark .deco-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(
-      180deg,
-      rgba(212, 160, 55, 1),
-      rgba(45, 122, 95, 1)
-    );
-  }
-}
-
-/* Utility classes for decorative patterns */
-@layer utilities {
-  .pattern-nouveau {
-    background-image:
-      radial-gradient(circle at 20% 50%, theme('colors.nouveau-lavender.200') 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, theme('colors.nouveau-rose.200') 0%, transparent 50%),
-      radial-gradient(circle at 40% 20%, theme('colors.nouveau-mint.200') 0%, transparent 50%),
-      radial-gradient(circle at 60% 70%, theme('colors.nouveau-sage.200') 0%, transparent 40%);
-    background-size: 400% 400%;
-    animation: gradient-shift 15s ease infinite;
-  }
-
-  @keyframes gradient-shift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-
-  .pattern-deco {
-    background-image:
-      linear-gradient(135deg, theme('colors.deco-navy.500') 0%, transparent 50%),
-      linear-gradient(45deg, theme('colors.deco-burgundy.500') 0%, transparent 50%);
+  .dark .glass-scrollbar {
+    scrollbar-color: rgba(200, 200, 200, 0.7) rgba(60, 60, 60, 0.7);
   }
 }
 

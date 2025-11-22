@@ -33,7 +33,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
     <div className="flex justify-start">
       <div className="max-w-[85%]">
         <div className="rounded-2xl dark:rounded-lg px-4 py-3 glass-message-assistant transition-all duration-300">
-          <div className="text-sm font-semibold mb-2 text-nouveau-sage-500 dark:text-deco-gold">Assistant</div>
+          <div className="text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200">Assistant</div>
 
           {/* Render each content block */}
           {message.contents.map((content, index) => (

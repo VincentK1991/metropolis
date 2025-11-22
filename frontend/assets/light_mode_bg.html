@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organic Flows - Light Mode Background</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Background canvas - positioned fixed */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        #bg-canvas canvas {
+            display: block;
+        }
+
+        /* Your app content goes here */
+        .app-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .demo-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            padding: 48px;
+            border-radius: 16px;
+            border: 1px solid rgba(200, 150, 100, 0.2);
+            text-align: center;
+            color: #2a2a2a;
+            max-width: 520px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        }
+
+        .demo-card h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .demo-card p {
+            font-size: 16px;
+            opacity: 0.7;
+            line-height: 1.7;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background container -->
+    <div id="bg-canvas"></div>
+
+    <!-- Your app content goes here -->
+    <!-- <div class="app-content">
+        <div class="demo-card">
+            <h1>Organic Flows</h1>
+            <p>A different algorithmic style perfect for light mode. Smooth, flowing curves create an elegant, organic aesthetic.</p>
+        </div>
+    </div> -->
+
+    <script>
+        let time = 0;
+        let flowPaths = [];
+
+        function setup() {
+            let container = document.getElementById('bg-canvas');
+            let canvas = createCanvas(window.innerWidth, window.innerHeight);
+            canvas.parent('bg-canvas');
+
+            initializeFlows();
+        }
+
+        function initializeFlows() {
+            flowPaths = [];
+            // Create multiple flowing paths
+            for (let i = 0; i < 7; i++) {
+                flowPaths.push({
+                    startY: (height / 7) * i + random(-20, 20),
+                    amplitude: random(40, 80),
+                    frequency: random(0.002, 0.005),
+                    speed: random(0.3, 0.8),
+                    color: selectColor(i),
+                    thickness: random(1.5, 3)
+                });
+            }
+        }
+
+        function selectColor(index) {
+            const colors = [
+                { h: 15, s: 70, b: 70 },    // Warm coral
+                { h: 40, s: 60, b: 75 },    // Golden
+                { h: 100, s: 50, b: 70 },   // Sage green
+                { h: 180, s: 60, b: 75 },   // Soft teal
+                { h: 260, s: 40, b: 75 }    // Lavender
+            ];
+            return colors[index % colors.length];
+        }
+
+        function draw() {
+            background(248, 246, 240); // Warm cream background
+
+            time += 0.005;
+
+            // Draw flowing curves
+            colorMode(HSB);
+            for (let flowPath of flowPaths) {
+                drawFlowingCurve(flowPath);
+            }
+            colorMode(RGB);
+
+            // Draw organic blobs
+            drawOrganicShapes();
+        }
+
+        function drawFlowingCurve(flow) {
+            stroke(flow.color.h, flow.color.s, flow.color.b, 80);
+            strokeWeight(flow.thickness);
+            noFill();
+
+            beginShape();
+            for (let x = 0; x < width; x += 8) {
+                let y = flow.startY;
+                y += sin(x * flow.frequency + time * flow.speed) * flow.amplitude;
+                y += cos(x * flow.frequency * 0.5 + time * flow.speed * 0.7) * (flow.amplitude * 0.5);
+                vertex(x, y);
+            }
+            endShape();
+        }
+
+        function drawOrganicShapes() {
+            for (let i = 0; i < 7; i++) {
+                let x = width * (0.3 + i * 0.25);
+                let y = height * (0.3 + sin(time + i) * 0.2);
+                let size = 80 + sin(time * 0.5 + i * 2) * 30;
+
+                colorMode(HSB);
+                let color = selectColor(i + 2);
+                stroke(color.h, color.s, color.b, 40);
+                strokeWeight(2);
+                noFill();
+
+                // Draw organic blob with deformation
+                drawBlob(x, y, size, i);
+            }
+            colorMode(RGB);
+        }
+
+        function drawBlob(x, y, size, seed) {
+            beginShape();
+            for (let angle = 0; angle < TWO_PI; angle += TWO_PI / 40) {
+                let r = size;
+                // Add organic deformation
+                r += sin(angle * 3 + time + seed) * (size * 0.3);
+                r += cos(angle * 5 + time * 0.7 + seed) * (size * 0.2);
+                r += noise(cos(angle) * 0.5, sin(angle) * 0.5, time * 0.1 + seed) * (size * 0.15);
+
+                let px = x + cos(angle) * r;
+                let py = y + sin(angle) * r;
+                vertex(px, py);
+            }
+            endShape(CLOSE);
+        }
+
+        function windowResized() {
+            if (window.innerWidth > 100 && window.innerHeight > 100) {
+                resizeCanvas(window.innerWidth, window.innerHeight);
+                initializeFlows();
+            }
+        }
+    </script>
+</body>
+</html>

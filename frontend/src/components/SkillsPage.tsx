@@ -39,7 +39,7 @@ export const SkillsPage = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-nouveau-cream">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
               Skills
             </h1>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
@@ -48,7 +48,7 @@ export const SkillsPage = () => {
           </div>
           <button
             onClick={() => setIsCreating(true)}
-            className="px-4 py-2 bg-nouveau-lavender-500 dark:bg-deco-gold text-white dark:text-deco-navy rounded-lg hover:bg-nouveau-lavender-600 dark:hover:bg-deco-gold/90 transition-colors font-medium"
+            className="glass-button px-4 py-2 rounded-lg text-gray-900 dark:text-gray-100 transition-colors font-medium"
           >
             + Create New Skill
           </button>
@@ -57,7 +57,7 @@ export const SkillsPage = () => {
         {/* Loading State */}
         {isLoading && (
           <div className="text-center py-12">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-nouveau-lavender-500 dark:border-deco-gold border-r-transparent"></div>
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 dark:border-blue-400 border-r-transparent"></div>
             <p className="mt-4 text-gray-600 dark:text-gray-400">Loading skills...</p>
           </div>
         )}

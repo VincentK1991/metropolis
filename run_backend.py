@@ -23,6 +23,6 @@ if __name__ == "__main__":
         "metropolis.app:app",
         host="0.0.0.0",
         port=8088,
-        reload=False,  # Enable auto-reload during development
+        reload=True,  # Enable auto-reload during development
         log_level="info",
     )

@@ -23,16 +23,16 @@ export const ProfileMenu: React.FC = () => {
   }, [isOpen])
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative z-50" ref={menuRef}>
       {/* Profile Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-lg hover:bg-nouveau-lavender-200 dark:hover:bg-deco-navy-400 transition-colors focus:outline-none focus:ring-2 focus:ring-nouveau-lavender-400 dark:focus:ring-deco-gold"
+        className="glass-button p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:ring-offset-2 focus:ring-offset-transparent"
         aria-label="Profile menu"
         aria-expanded={isOpen}
       >
         <svg
-          className="w-6 h-6 text-gray-900 dark:text-nouveau-cream"
+          className="w-6 h-6 text-gray-900 dark:text-gray-100"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -54,11 +54,11 @@ export const ProfileMenu: React.FC = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 rounded-lg shadow-xl bg-white dark:bg-deco-navy-600 border border-gray-200 dark:border-gray-700 z-50">
+        <div className="glass-card absolute right-0 mt-2 w-80 shadow-xl z-[100]">
           <FeatureFlagPanel />
 
-          <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-3">
-            <div className="text-xs text-gray-600 dark:text-gray-400">
+          <div className="border-t border-white/20 dark:border-white/10 px-4 py-3">
+            <div className="text-xs text-gray-600 dark:text-gray-300">
               <p>Metropolis v1.0.0</p>
               <p className="mt-1">Feature flags are saved locally</p>
             </div>

@@ -41,13 +41,13 @@ export const WorkspaceList = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-nouveau-cream via-nouveau-lavender-100 to-nouveau-rose-100 dark:from-deco-navy-600 dark:via-deco-navy-500 dark:to-deco-burgundy-600 p-8">
+    <div className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-nouveau-cream mb-2">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 Workspaces
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
@@ -56,7 +56,7 @@ export const WorkspaceList = () => {
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="px-6 py-3 rounded-lg bg-gradient-to-r from-nouveau-rose-400 to-nouveau-lavender-400 dark:from-deco-gold to-deco-emerald text-white font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
+              className="glass-button px-6 py-3 rounded-lg text-gray-900 dark:text-gray-100 font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
             >
               + New Workspace
             </button>
@@ -73,7 +73,7 @@ export const WorkspaceList = () => {
         {/* Loading */}
         {loading && (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-nouveau-rose-400 dark:border-deco-gold"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 dark:border-blue-400"></div>
           </div>
         )}
 
@@ -132,8 +132,8 @@ const CreateWorkspaceModal = ({ onClose, onCreate }: CreateWorkspaceModalProps) 
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-deco-navy-500 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-nouveau-cream mb-4">
+      <div className="glass-card rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           Create New Workspace
         </h2>
         <form onSubmit={handleSubmit}>
@@ -145,7 +145,7 @@ const CreateWorkspaceModal = ({ onClose, onCreate }: CreateWorkspaceModalProps) 
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-deco-navy-600 text-gray-900 dark:text-nouveau-cream focus:outline-none focus:ring-2 focus:ring-nouveau-rose-400 dark:focus:ring-deco-gold"
+              className="w-full px-3 py-2 border border-white/25 dark:border-white/15 rounded-lg glass-light dark:glass-dark text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
               placeholder="My Workspace"
               required
             />
@@ -157,7 +157,7 @@ const CreateWorkspaceModal = ({ onClose, onCreate }: CreateWorkspaceModalProps) 
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-deco-navy-600 text-gray-900 dark:text-nouveau-cream focus:outline-none focus:ring-2 focus:ring-nouveau-rose-400 dark:focus:ring-deco-gold"
+              className="w-full px-3 py-2 border border-white/25 dark:border-white/15 rounded-lg glass-light dark:glass-dark text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
               placeholder="Describe your workspace..."
               rows={3}
             />
@@ -166,13 +166,13 @@ const CreateWorkspaceModal = ({ onClose, onCreate }: CreateWorkspaceModalProps) 
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-deco-navy-600 transition-colors"
+              className="flex-1 px-4 py-2 border border-white/25 dark:border-white/15 rounded-lg glass-light dark:glass-dark text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-white/10 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-nouveau-rose-400 to-nouveau-lavender-400 dark:from-deco-gold to-deco-emerald text-white font-semibold hover:shadow-lg transition-all"
+              className="flex-1 px-4 py-2 rounded-lg glass-button text-gray-900 dark:text-gray-100 font-semibold hover:shadow-lg transition-all"
             >
               Create
             </button>

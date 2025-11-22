@@ -17,9 +17,9 @@ export const FeatureFlagToggle: React.FC<FeatureFlagToggleProps> = ({
   onToggle,
 }) => {
   return (
-    <div className="flex items-center justify-between py-3 px-4 hover:bg-nouveau-lavender-100 dark:hover:bg-deco-navy-400 rounded-lg transition-colors">
+    <div className="flex items-center justify-between py-3 px-4 hover:bg-white/10 dark:hover:bg-white/5 rounded-lg transition-colors">
       <div className="flex-1 mr-4">
-        <div className="text-sm font-medium text-gray-900 dark:text-nouveau-cream">
+        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
           {label}
         </div>
         <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -28,9 +28,9 @@ export const FeatureFlagToggle: React.FC<FeatureFlagToggleProps> = ({
       </div>
       <button
         onClick={onToggle}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-nouveau-lavender-400 dark:focus:ring-deco-gold focus:ring-offset-2 ${
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:ring-offset-2 ${
           enabled
-            ? 'bg-nouveau-lavender-400 dark:bg-deco-gold'
+            ? 'bg-blue-500 dark:bg-blue-400'
             : 'bg-gray-300 dark:bg-gray-600'
         }`}
         role="switch"

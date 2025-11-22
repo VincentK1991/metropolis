@@ -20,6 +20,20 @@ class SessionConfig(BaseModel):
     client_idle_timeout_minutes: int = 30
 
 
+class ContainerizedAgentConfig(BaseModel):
+    """Containerized agent API configuration."""
+
+    url: str = os.getenv("CONTAINERIZED_AGENT_URL", "http://localhost:8089")
+
+
+class OpenAIConfig(BaseModel):
+    """OpenAI API configuration."""
+
+    api_key: str = os.getenv("OPENAI_API_KEY", "")
+
+
 # Global config instances
 db_config = DatabaseConfig()
 session_config = SessionConfig()
+containerized_agent_config = ContainerizedAgentConfig()
+openai_config = OpenAIConfig()

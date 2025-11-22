@@ -68,6 +68,15 @@ if [ "$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
     docker exec ${CONTAINER_NAME} chown -R ${HOST_UID}:${HOST_GID} /app/workspace 2>/dev/null || true
     docker exec ${CONTAINER_NAME} chmod -R u+rwX /app/workspace 2>/dev/null || true
 
+    # Ensure Claude skills are copied to mounted volume (backup in case entrypoint didn't run)
+    if ! docker exec ${CONTAINER_NAME} test -d /home/appuser/.claude/skills 2>/dev/null || \
+       [ -z "$(docker exec ${CONTAINER_NAME} ls -A /home/appuser/.claude/skills 2>/dev/null)" ]; then
+        echo "Copying Claude skills to mounted volume..."
+        docker exec ${CONTAINER_NAME} bash -c "mkdir -p /home/appuser/.claude/skills && cp -r /opt/claude-skills/* /home/appuser/.claude/skills/ 2>/dev/null || true" || true
+        docker exec ${CONTAINER_NAME} chown -R ${HOST_UID}:${HOST_GID} /home/appuser/.claude/skills 2>/dev/null || true
+        echo "✓ Skills copied"
+    fi
+
     echo "✓ Permissions fixed"
 else
     echo "Warning: Container not running, skipping permission fix"

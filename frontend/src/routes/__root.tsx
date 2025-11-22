@@ -2,35 +2,47 @@ import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { AgentChatProvider } from '../contexts/AgentChatContext'
 import { WorkspaceThreadProvider } from '../contexts/WorkspaceThreadContext'
-import { ThemeProvider } from '../contexts/ThemeContext'
+import { ThemeProvider, useTheme } from '../contexts/ThemeContext'
 import { FeatureFlagProvider, useFeatureFlags } from '../contexts/FeatureFlagContext'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { ProfileMenu } from '../components/ProfileMenu'
 
 function RootLayout() {
   const { flags } = useFeatureFlags()
+  const { theme } = useTheme()
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-nouveau-lavender-200 via-nouveau-rose-200 to-nouveau-mint-200 dark:from-deco-navy-500 dark:via-deco-burgundy-400 dark:to-deco-emerald-500 pattern-nouveau dark:pattern-deco transition-all duration-300">
-      <nav className="backdrop-blur-xl bg-amber/70 dark:bg-deco-navy/70 backdrop-saturate-150 shadow-lg flex-shrink-0 border-b border-white/30 dark:border-deco-gold/20">
+    <div className="flex flex-col h-screen relative overflow-hidden transition-all duration-300">
+      {/* Algorithmic art background */}
+      <iframe
+        src={theme === 'dark' ? '/assets/dark_mode_bg.html' : '/assets/light_mode_bg.html'}
+        className="fixed inset-0 w-full h-full border-0 pointer-events-none z-0"
+        style={{ zIndex: 0 }}
+        title="Background"
+      />
+      {/* Content layer */}
+      <div className="relative z-10 flex flex-col h-screen">
+      <nav className="glass-light dark:glass-dark backdrop-saturate-180 shadow-lg flex-shrink-0 relative z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex space-x-8">
-              <Link
-                to="/"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-nouveau-cream hover:text-nouveau-lavender-500 dark:hover:text-deco-gold transition-colors"
-                activeProps={{
-                  className: 'border-b-2 border-nouveau-lavender-400 dark:border-deco-gold',
-                }}
-              >
-                Home
-              </Link>
+              {flags.enableLegacyHome && (
+                <Link
+                  to="/"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  activeProps={{
+                    className: 'border-b-2 border-blue-500 dark:border-blue-400',
+                  }}
+                >
+                  Home
+                </Link>
+              )}
               {flags.enableChatPage && (
                 <Link
                   to="/chat"
-                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-nouveau-cream hover:text-nouveau-lavender-500 dark:hover:text-deco-gold transition-colors"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   activeProps={{
-                    className: 'border-b-2 border-nouveau-lavender-400 dark:border-deco-gold',
+                    className: 'border-b-2 border-blue-500 dark:border-blue-400',
                   }}
                 >
                   Chat
@@ -39,9 +51,9 @@ function RootLayout() {
               {flags.enableSkills && (
                 <Link
                   to="/skills"
-                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-nouveau-cream hover:text-nouveau-lavender-500 dark:hover:text-deco-gold transition-colors"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   activeProps={{
-                    className: 'border-b-2 border-nouveau-lavender-400 dark:border-deco-gold',
+                    className: 'border-b-2 border-blue-500 dark:border-blue-400',
                   }}
                 >
                   Skills
@@ -50,12 +62,23 @@ function RootLayout() {
               {flags.enableWorkflow && (
                 <Link
                   to="/workflow"
-                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-nouveau-cream hover:text-nouveau-lavender-500 dark:hover:text-deco-gold transition-colors"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   activeProps={{
-                    className: 'border-b-2 border-nouveau-lavender-400 dark:border-deco-gold',
+                    className: 'border-b-2 border-blue-500 dark:border-blue-400',
                   }}
                 >
                   Workflow
+                </Link>
+              )}
+              {flags.enableAgentV2 && (
+                <Link
+                  to="/agentV2"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  activeProps={{
+                    className: 'border-b-2 border-blue-500 dark:border-blue-400',
+                  }}
+                >
+                  Agent V2
                 </Link>
               )}
               <Link
@@ -78,6 +101,7 @@ function RootLayout() {
       <main className="flex-1 overflow-hidden">
         <Outlet />
       </main>
+      </div>
     </div>
   )
 }

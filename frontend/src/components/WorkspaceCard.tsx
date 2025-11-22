@@ -16,14 +16,14 @@ export const WorkspaceCard = ({ workspace }: WorkspaceCardProps) => {
       params={{ workspaceId: workspace._id }}
       className="block group"
     >
-      <div className="backdrop-blur-xl bg-white/60 dark:bg-deco-navy-500/60 rounded-xl p-6 border border-white/40 dark:border-deco-gold/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/70 dark:hover:bg-deco-navy-500/70">
+      <div className="glass-card rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-nouveau-cream group-hover:text-nouveau-rose-600 dark:group-hover:text-deco-gold transition-colors">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {workspace.name}
           </h3>
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 text-xs font-medium rounded-full bg-nouveau-lavender-200/60 dark:bg-deco-emerald/30 text-nouveau-lavender-800 dark:text-deco-emerald-200">
+            <span className="px-3 py-1 text-xs font-medium rounded-full glass-light dark:glass-dark text-gray-700 dark:text-gray-200">
               {workspace.skill_ids.length} {workspace.skill_ids.length === 1 ? 'skill' : 'skills'}
             </span>
           </div>
@@ -42,7 +42,7 @@ export const WorkspaceCard = ({ workspace }: WorkspaceCardProps) => {
             {workspace.skills.slice(0, 3).map((skill) => (
               <span
                 key={skill._id}
-                className="px-2 py-1 text-xs rounded-md bg-nouveau-sage-100/70 dark:bg-deco-navy-400/70 text-nouveau-sage-800 dark:text-nouveau-cream"
+                className="px-2 py-1 text-xs rounded-md glass-light dark:glass-dark text-gray-700 dark:text-gray-200"
               >
                 {skill.title}
               </span>
@@ -56,8 +56,8 @@ export const WorkspaceCard = ({ workspace }: WorkspaceCardProps) => {
         )}
 
         {/* Footer */}
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-xs text-gray-500 dark:text-gray-500">
+        <div className="mt-4 pt-4 border-t border-white/20 dark:border-white/10">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             Created {new Date(workspace.created_at).toLocaleDateString()}
           </p>
         </div>

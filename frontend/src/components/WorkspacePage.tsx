@@ -123,7 +123,7 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-nouveau-cream via-nouveau-lavender-100 to-nouveau-rose-100 dark:from-deco-navy-600 dark:via-deco-navy-500 dark:to-deco-burgundy-600 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-nouveau-rose-400 dark:border-deco-gold"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 dark:border-blue-400"></div>
       </div>
     )
   }
@@ -137,7 +137,7 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
           </div>
           <Link
             to="/workspace"
-            className="mt-4 inline-block text-nouveau-rose-600 dark:text-deco-gold hover:underline"
+            className="mt-4 inline-block text-blue-600 dark:text-blue-400 hover:underline"
           >
             ← Back to workspaces
           </Link>
@@ -153,13 +153,13 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
         <div className="mb-8">
           <Link
             to="/workspace"
-            className="inline-flex items-center text-nouveau-rose-600 dark:text-deco-gold hover:underline mb-4"
+            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline mb-4"
           >
             ← Back to workspaces
           </Link>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-nouveau-cream mb-2">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {workspace.name}
               </h1>
               {workspace.description && (
@@ -170,7 +170,7 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
             </div>
             <button
               onClick={handleStartNewThread}
-              className="px-6 py-3 rounded-lg bg-gradient-to-r from-nouveau-rose-400 to-nouveau-lavender-400 dark:from-deco-gold to-deco-emerald text-white font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
+              className="glass-button px-6 py-3 rounded-lg text-gray-900 dark:text-gray-100 font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
             >
               + New Thread
             </button>
@@ -180,11 +180,11 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Threads Section */}
           <div className="lg:col-span-2">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-nouveau-cream mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Threads
             </h2>
             {threads.length === 0 ? (
-              <div className="backdrop-blur-xl bg-white/60 dark:bg-deco-navy-500/60 rounded-xl p-8 border border-white/40 dark:border-deco-gold/20 text-center">
+              <div className="glass-card rounded-xl p-8 text-center">
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
                   No threads yet. Start a conversation!
                 </p>
@@ -200,7 +200,7 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
                 {threads.map((thread) => (
                   <div
                     key={thread.claude_session_id}
-                    className="backdrop-blur-xl bg-white/60 dark:bg-deco-navy-500/60 rounded-xl p-6 border border-white/40 dark:border-deco-gold/20 hover:shadow-lg transition-all duration-300 group"
+                    className="glass-card rounded-xl p-6 hover:shadow-lg transition-all duration-300 group"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <Link
@@ -210,7 +210,7 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-nouveau-cream mb-1 group-hover:text-nouveau-rose-600 dark:group-hover:text-deco-gold transition-colors">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                               {thread.metadata?.title || 'Untitled Thread'}
                             </h3>
                             <div className="flex items-center gap-2 mb-2">
@@ -260,13 +260,13 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
                 Manage Skills
               </button>
             </div>
-            <div className="backdrop-blur-xl bg-white/60 dark:bg-deco-navy-500/60 rounded-xl p-6 border border-white/40 dark:border-deco-gold/20">
+            <div className="glass-card rounded-xl p-6">
               {workspace.skills && workspace.skills.length > 0 ? (
                 <div className="space-y-2">
                   {workspace.skills.map((skill) => (
                     <div
                       key={skill._id}
-                      className="px-3 py-2 rounded-lg bg-nouveau-sage-100/70 dark:bg-deco-navy-400/70 text-nouveau-sage-800 dark:text-nouveau-cream"
+                      className="px-3 py-2 rounded-lg glass-light dark:glass-dark text-gray-700 dark:text-gray-200"
                     >
                       {skill.title}
                     </div>
@@ -293,8 +293,8 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
       {/* Manage Skills Modal */}
       {showSkillModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-deco-navy-500 rounded-xl p-6 max-w-2xl w-full mx-4 shadow-2xl max-h-[80vh] flex flex-col">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-nouveau-cream mb-4">
+          <div className="glass-card rounded-xl p-6 max-w-2xl w-full mx-4 shadow-2xl max-h-[80vh] flex flex-col">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Manage Workspace Skills
             </h2>
 
@@ -306,7 +306,7 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
                   </p>
                   <Link
                     to="/skills"
-                    className="mt-4 inline-block text-nouveau-rose-600 dark:text-deco-gold hover:underline"
+                    className="mt-4 inline-block text-blue-600 dark:text-blue-400 hover:underline"
                   >
                     Go to Skills Page →
                   </Link>
@@ -328,10 +328,10 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
                           type="checkbox"
                           checked={isSelected}
                           onChange={() => toggleSkillSelection(skill._id)}
-                          className="w-5 h-5 rounded border-gray-300 text-nouveau-sage-600 focus:ring-nouveau-sage-500 dark:border-gray-600 dark:bg-deco-navy-600"
+                          className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-white/20 dark:bg-white/5"
                         />
                         <div className="flex-1">
-                          <div className="font-semibold text-gray-900 dark:text-nouveau-cream">
+                          <div className="font-semibold text-gray-900 dark:text-gray-100">
                             {skill.title}
                           </div>
                           <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
@@ -354,7 +354,7 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
                 type="button"
                 onClick={() => setShowSkillModal(false)}
                 disabled={saving}
-                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-deco-navy-600 transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-white/10 rounded-lg glass-light dark:glass-dark text-gray-700 dark:text-gray-300 hover:bg-white/10 dark:hover:bg-white/5 transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -374,15 +374,15 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
       {/* Delete Thread Confirmation Modal */}
       {threadToDelete && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-deco-navy-500 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-nouveau-cream mb-4">
+          <div className="glass-card rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Delete Thread?
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Are you sure you want to delete this thread? This will permanently delete all messages in this conversation.
             </p>
-            <div className="bg-gray-100 dark:bg-deco-navy-600 rounded-lg p-3 mb-6">
-              <p className="text-sm font-medium text-gray-900 dark:text-nouveau-cream">
+            <div className="bg-gray-100 dark:bg-white/5 rounded-lg p-3 mb-6">
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                 {threadToDelete.metadata?.title || 'Untitled Thread'}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
@@ -394,7 +394,7 @@ export const WorkspacePage = ({ workspaceId }: WorkspacePageProps) => {
                 type="button"
                 onClick={() => setThreadToDelete(null)}
                 disabled={deletingThreadId !== null}
-                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-deco-navy-600 transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-white/10 rounded-lg glass-light dark:glass-dark text-gray-700 dark:text-gray-300 hover:bg-white/10 dark:hover:bg-white/5 transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>

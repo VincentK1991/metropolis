@@ -38,9 +38,9 @@ export const SkillCard = ({ skill, onView, onEdit }: SkillCardProps) => {
       </div>
 
       {/* Title and Actions */}
-      <div className="px-4 py-3 bg-white/50 dark:bg-deco-navy/50 border-t border-gray-200/50 dark:border-deco-gold/20">
+      <div className="px-4 py-3 glass-panel-light dark:glass-panel-dark border-t border-white/20 dark:border-white/10">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold text-gray-900 dark:text-nouveau-cream truncate flex-1 mr-2">
+          <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate flex-1 mr-2">
             {skill.title}
           </h3>
           <div className="flex gap-2">
