@@ -2,7 +2,7 @@
 
 import os
 
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 
 
 class DatabaseConfig(BaseModel):
@@ -24,13 +24,13 @@ class ContainerizedAgentConfig(BaseModel):
     """Containerized agent API configuration."""
 
     url: str = os.getenv("CONTAINERIZED_AGENT_URL", "http://localhost:8089")
-    anthropic_api_key: str = os.getenv("ANTHROPIC_API_KEY", "")
+    anthropic_api_key: SecretStr = SecretStr(os.getenv("ANTHROPIC_API_KEY", ""))
 
 
 class OpenAIConfig(BaseModel):
     """OpenAI API configuration."""
 
-    api_key: str = os.getenv("OPENAI_API_KEY", "")
+    api_key: SecretStr = SecretStr(os.getenv("OPENAI_API_KEY", ""))
 
 
 class RedisConfig(BaseModel):
@@ -39,7 +39,7 @@ class RedisConfig(BaseModel):
     host: str = os.getenv("REDIS_HOST", "localhost")
     port: int = int(os.getenv("REDIS_PORT", "6379"))
     db: int = int(os.getenv("REDIS_DB", "0"))
-    password: str = os.getenv("REDIS_PASSWORD", "")
+    password: SecretStr = SecretStr(os.getenv("REDIS_PASSWORD", ""))
 
 
 class KubernetesConfig(BaseModel):

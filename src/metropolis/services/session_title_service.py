@@ -15,11 +15,14 @@ class SessionTitleService:
 
     def __init__(self):
         """Initialize the OpenAI client."""
-        if not openai_config.api_key:
+        api_key_secret = openai_config.api_key
+        api_key = api_key_secret.get_secret_value() if api_key_secret else ""
+
+        if not api_key:
             logger.warning("OPENAI_API_KEY not set, title generation will fail")
             self.client = None
         else:
-            self.client = OpenAI(api_key=openai_config.api_key)
+            self.client = OpenAI(api_key=api_key)
 
     async def generate_title(self, user_query: str) -> str:
         """
@@ -69,4 +72,3 @@ class SessionTitleService:
         except Exception as e:
             logger.error(f"Failed to generate session title: {e}", exc_info=True)
             return "Untitled Session"
-
