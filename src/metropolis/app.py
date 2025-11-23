@@ -1,3 +1,5 @@
+import asyncio
+import logging
 import os
 from contextlib import asynccontextmanager
 
@@ -41,20 +43,30 @@ from metropolis.services.containerized_agent_service import ContainerizedAgentSe
 from metropolis.services.containerized_file_service import ContainerizedFileService
 from metropolis.services.file_service import FileService
 from metropolis.services.jsonl_handler import JSONLHandler
+from metropolis.services.k8s_pod_manager import PodManager
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Manage application lifecycle."""
     # Startup
-    print("Starting Metropolis Agent API...")
+    logger.info("Starting Metropolis Agent API...")
 
     # Initialize MongoDB session store
     session_store = SessionStore(
         mongodb_uri=db_config.uri, database_name=db_config.database
     )
     await session_store.create_indexes()
-    print("MongoDB session store initialized")
+    logger.info("MongoDB session store initialized")
 
     # Initialize session store singleton
     init_session_store(session_store)
@@ -64,7 +76,7 @@ async def lifespan(app: FastAPI):
         mongodb_uri=db_config.uri, database_name=db_config.database
     )
     await skill_store.create_indexes()
-    print("MongoDB skill store initialized")
+    logger.info("MongoDB skill store initialized")
 
     # Initialize skill store singleton
     init_skill_store(skill_store)
@@ -74,7 +86,7 @@ async def lifespan(app: FastAPI):
         mongodb_uri=db_config.uri, database_name=db_config.database
     )
     await workflow_store.create_indexes()
-    print("MongoDB workflow store initialized")
+    logger.info("MongoDB workflow store initialized")
 
     # Initialize workflow store singleton
     init_workflow_store(workflow_store)
@@ -91,14 +103,14 @@ async def lifespan(app: FastAPI):
         mongodb_uri=db_config.uri, database_name=db_config.database
     )
     await workspace_store.create_indexes()
-    print("MongoDB workspace store initialized")
+    logger.info("MongoDB workspace store initialized")
 
     # Initialize MongoDB workspace thread store
     workspace_thread_store = WorkspaceThreadStore(
         mongodb_uri=db_config.uri, database_name=db_config.database
     )
     await workspace_thread_store.create_indexes()
-    print("MongoDB workspace thread store initialized")
+    logger.info("MongoDB workspace thread store initialized")
 
     # Initialize workspace store singletons
     init_workspace_store(workspace_store)
@@ -108,43 +120,88 @@ async def lifespan(app: FastAPI):
     # Initialize file service
     file_service = FileService(workspace_thread_store)
     init_file_service(file_service)
-    print("File service initialized")
+    logger.info("File service initialized")
 
     # Initialize JSONL handler
     jsonl_handler = JSONLHandler()
-    print("JSONL handler initialized")
+    logger.info("JSONL handler initialized")
 
     init_agent_manager(session_store, main_agent_option, jsonl_handler)
-    print("Agent manager initialized")
+    logger.info("Agent manager initialized")
 
     # Initialize MongoDB containerized agent store
     containerized_agent_store = ContainerizedAgentStore(
         mongodb_uri=db_config.uri, database_name=db_config.database
     )
     await containerized_agent_store.create_indexes()
-    print("MongoDB containerized agent store initialized")
+    logger.info("MongoDB containerized agent store initialized")
+
+    # Initialize PodManager for Kubernetes pod lifecycle management
+    pod_manager = PodManager()
+    try:
+        await pod_manager.initialize()
+        logger.info("PodManager initialized")
+    except Exception as e:
+        logger.warning(f"Failed to initialize PodManager: {e}")
+        logger.info("Containerized agent will use static URL configuration")
+        pod_manager = None
 
     # Initialize containerized agent service
-    containerized_agent_service = ContainerizedAgentService(containerized_agent_store)
+    containerized_agent_service = ContainerizedAgentService(
+        containerized_agent_store, pod_manager=pod_manager
+    )
     init_v2_agent_service(containerized_agent_service, containerized_agent_store)
-    print("Containerized agent service initialized")
+    logger.info("Containerized agent service initialized")
 
     # Initialize containerized file service
     containerized_file_service = ContainerizedFileService()
     init_v2_file_service(containerized_file_service)
-    print("Containerized file service initialized")
+    logger.info("Containerized file service initialized")
+
+    # Start background task for pod cleanup
+    cleanup_task = None
+    if pod_manager:
+
+        async def cleanup_loop():
+            """Background task to periodically clean up idle pods."""
+            while True:
+                try:
+                    await asyncio.sleep(60)  # Run every minute
+                    await pod_manager.cleanup_idle_pods()
+                except asyncio.CancelledError:
+                    break
+                except Exception as e:
+                    logger.error(f"Error in pod cleanup loop: {e}", exc_info=True)
+
+        cleanup_task = asyncio.create_task(cleanup_loop())
+        logger.info("Pod cleanup background task started")
 
     yield
 
     # Shutdown
-    print("Shutting down Metropolis Agent API...")
+    logger.info("Shutting down Metropolis Agent API...")
+
+    # Cancel cleanup task if running
+    if cleanup_task:
+        cleanup_task.cancel()
+        try:
+            await cleanup_task
+        except asyncio.CancelledError:
+            pass
+        logger.info("Pod cleanup task stopped")
+
+    # Close PodManager
+    if pod_manager:
+        await pod_manager.close()
+        logger.info("PodManager closed")
+
     await session_store.close()
     await skill_store.close()
     await workflow_store.close()
     await workspace_store.close()
     await workspace_thread_store.close()
     await containerized_agent_store.close()
-    print("MongoDB connection closed")
+    logger.info("MongoDB connection closed")
 
 
 # Create FastAPI application
@@ -212,4 +269,5 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8088)
+    # Binding to 0.0.0.0 is intentional for server to accept external connections
+    uvicorn.run(app, host="0.0.0.0", port=8088)  # pyright: ignore[reportGeneralTypeIssues]

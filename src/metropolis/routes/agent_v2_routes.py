@@ -77,12 +77,23 @@ async def query(request: QueryRequest):
     # Stream query results
     async def generate():
         try:
-            query_gen = agent_service.query(request.user_input, request.session_id)
+            # Use default user_id for now (single-user setup)
+            user_id = "default"
+            logger.info(
+                f"[ROUTE] Calling agent_service.query with user_id={user_id}, "
+                f"session_id={request.session_id}"
+            )
+            query_gen = agent_service.query(
+                request.user_input, request.session_id, user_id=user_id
+            )
+            logger.info("[ROUTE] Query generator created, starting to iterate...")
             async for event in query_gen:
                 yield event
-            logger.info("Query completed")
+            logger.info("[ROUTE] Query completed successfully")
         except Exception as e:
-            logger.error(f"Error during query streaming: {str(e)}", exc_info=True)
+            logger.error(
+                f"[ROUTE] Error during query streaming: {str(e)}", exc_info=True
+            )
             error_event = {"type": "error", "error": str(e)}
             yield f"data: {json.dumps(error_event)}\n\n"
 
