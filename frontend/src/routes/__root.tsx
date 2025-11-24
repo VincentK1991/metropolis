@@ -81,6 +81,17 @@ function RootLayout() {
                   Agent V2
                 </Link>
               )}
+              {flags.enableLocalTesting && (
+                <Link
+                  to="/localAgentV2"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  activeProps={{
+                    className: 'border-b-2 border-blue-500 dark:border-blue-400',
+                  }}
+                >
+                  Local Testing
+                </Link>
+              )}
               <Link
                 to="/about"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-nouveau-cream hover:text-nouveau-lavender-500 dark:hover:text-deco-gold transition-colors"

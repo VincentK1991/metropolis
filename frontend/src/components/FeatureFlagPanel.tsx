@@ -31,6 +31,11 @@ export const FeatureFlagPanel: React.FC = () => {
       label: 'Enable Legacy Home',
       description: 'Shows the legacy workspace page (Agent V1)',
     },
+    {
+      flag: 'enableLocalTesting' as const,
+      label: 'Enable Local Testing',
+      description: 'Shows the Local Agent V2 chat panel (for local testing)',
+    },
   ]
 
   return (

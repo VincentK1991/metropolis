@@ -1,7 +1,6 @@
 """Service for generating session titles using OpenAI."""
 
 import logging
-from typing import Optional
 
 from openai import OpenAI
 

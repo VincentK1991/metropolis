@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkflowRouteImport } from './routes/workflow'
 import { Route as SkillsRouteImport } from './routes/skills'
+import { Route as LocalAgentV2RouteImport } from './routes/localAgentV2'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AgentV2RouteImport } from './routes/agentV2'
 import { Route as AboutRouteImport } from './routes/about'
@@ -27,6 +28,11 @@ const WorkflowRoute = WorkflowRouteImport.update({
 const SkillsRoute = SkillsRouteImport.update({
   id: '/skills',
   path: '/skills',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocalAgentV2Route = LocalAgentV2RouteImport.update({
+  id: '/localAgentV2',
+  path: '/localAgentV2',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatRoute = ChatRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/agentV2': typeof AgentV2Route
   '/chat': typeof ChatRoute
+  '/localAgentV2': typeof LocalAgentV2Route
   '/skills': typeof SkillsRoute
   '/workflow': typeof WorkflowRoute
   '/workspace': typeof WorkspaceIndexRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/agentV2': typeof AgentV2Route
   '/chat': typeof ChatRoute
+  '/localAgentV2': typeof LocalAgentV2Route
   '/skills': typeof SkillsRoute
   '/workflow': typeof WorkflowRoute
   '/workspace': typeof WorkspaceIndexRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/agentV2': typeof AgentV2Route
   '/chat': typeof ChatRoute
+  '/localAgentV2': typeof LocalAgentV2Route
   '/skills': typeof SkillsRoute
   '/workflow': typeof WorkflowRoute
   '/workspace/': typeof WorkspaceIndexRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/agentV2'
     | '/chat'
+    | '/localAgentV2'
     | '/skills'
     | '/workflow'
     | '/workspace'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/agentV2'
     | '/chat'
+    | '/localAgentV2'
     | '/skills'
     | '/workflow'
     | '/workspace'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/agentV2'
     | '/chat'
+    | '/localAgentV2'
     | '/skills'
     | '/workflow'
     | '/workspace/'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AgentV2Route: typeof AgentV2Route
   ChatRoute: typeof ChatRoute
+  LocalAgentV2Route: typeof LocalAgentV2Route
   SkillsRoute: typeof SkillsRoute
   WorkflowRoute: typeof WorkflowRoute
   WorkspaceIndexRoute: typeof WorkspaceIndexRoute
@@ -163,6 +176,13 @@ declare module '@tanstack/react-router' {
       path: '/skills'
       fullPath: '/skills'
       preLoaderRoute: typeof SkillsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/localAgentV2': {
+      id: '/localAgentV2'
+      path: '/localAgentV2'
+      fullPath: '/localAgentV2'
+      preLoaderRoute: typeof LocalAgentV2RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat': {
@@ -222,6 +242,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AgentV2Route: AgentV2Route,
   ChatRoute: ChatRoute,
+  LocalAgentV2Route: LocalAgentV2Route,
   SkillsRoute: SkillsRoute,
   WorkflowRoute: WorkflowRoute,
   WorkspaceIndexRoute: WorkspaceIndexRoute,

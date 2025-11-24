@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from metropolis.config.settings import db_config
 from metropolis.db.containerized_agent_store import ContainerizedAgentStore
+from metropolis.db.local_agent_store import LocalAgentStore
 from metropolis.db.session_store import SessionStore
 from metropolis.db.skill_store import SkillStore
 from metropolis.db.workflow_store import WorkflowStore
@@ -22,6 +23,10 @@ from metropolis.routes.agent_v2_routes import (
     init_agent_service as init_v2_agent_service,
 )
 from metropolis.routes.agent_v2_routes import router as agent_v2_router
+from metropolis.routes.local_agent_v2_routes import (
+    init_agent_service as init_local_agent_service,
+)
+from metropolis.routes.local_agent_v2_routes import router as local_agent_v2_router
 from metropolis.routes.session_routes import init_session_store
 from metropolis.routes.session_routes import router as session_router
 from metropolis.routes.skill_routes import init_skill_store
@@ -44,6 +49,7 @@ from metropolis.services.containerized_file_service import ContainerizedFileServ
 from metropolis.services.file_service import FileService
 from metropolis.services.jsonl_handler import JSONLHandler
 from metropolis.services.k8s_pod_manager import PodManager
+from metropolis.services.local_agent_service import LocalAgentService
 
 # Configure logging
 logging.basicConfig(
@@ -158,6 +164,18 @@ async def lifespan(app: FastAPI):
     init_v2_file_service(containerized_file_service)
     logger.info("Containerized file service initialized")
 
+    # Initialize MongoDB local agent store
+    local_agent_store = LocalAgentStore(
+        mongodb_uri=db_config.uri, database_name=db_config.database
+    )
+    await local_agent_store.create_indexes()
+    logger.info("MongoDB local agent store initialized")
+
+    # Initialize local agent service (no PodManager needed)
+    local_agent_service = LocalAgentService(local_agent_store)
+    init_local_agent_service(local_agent_service, local_agent_store)
+    logger.info("Local agent service initialized")
+
     # Start background task for pod cleanup
     cleanup_task = None
     if pod_manager:
@@ -201,6 +219,7 @@ async def lifespan(app: FastAPI):
     await workspace_store.close()
     await workspace_thread_store.close()
     await containerized_agent_store.close()
+    await local_agent_store.close()
     logger.info("MongoDB connection closed")
 
 
@@ -247,6 +266,7 @@ app.include_router(workflow_router)
 app.include_router(workspace_router)
 app.include_router(agent_v2_router)
 app.include_router(agent_v2_file_router)
+app.include_router(local_agent_v2_router)
 
 
 @app.get("/")
@@ -263,6 +283,7 @@ async def root():
         "workspaces_api": "/api/workspaces",
         "agent_v2_api": "/api/v2/agent",
         "agent_v2_files_api": "/api/v2/agent/files",
+        "local_agent_v2_api": "/api/v2/local-agent",
     }
 
 

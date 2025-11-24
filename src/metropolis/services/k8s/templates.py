@@ -187,4 +187,3 @@ def get_pod_template(user_id: str, api_key: str) -> Dict[str, Any]:
             "restartPolicy": "Never",  # We manage lifecycle manually
         },
     }
-

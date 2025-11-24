@@ -6,6 +6,7 @@ export interface FeatureFlags {
   enableSkills: boolean
   enableAgentV2: boolean
   enableLegacyHome: boolean
+  enableLocalTesting: boolean
 }
 
 interface FeatureFlagContextType {
@@ -20,6 +21,7 @@ const defaultFlags: FeatureFlags = {
   enableSkills: true, // Visible by default
   enableAgentV2: true, // Visible by default (new default agent)
   enableLegacyHome: false, // Hidden by default (legacy agent v1 workspace page)
+  enableLocalTesting: false, // Hidden by default (local testing panel)
 }
 
 const STORAGE_KEY = 'metropolis-feature-flags'

@@ -17,6 +17,7 @@ uv.lock
 
 # Data directory (contains session data)
 data/
+local_data/
 
 # IDE
 .vscode/

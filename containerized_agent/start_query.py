@@ -273,7 +273,7 @@ class QueryConfig:
 
     user_input: str
     session_id: str = ""
-    api_url: str = "http://localhost:8089"
+    api_url: str = "http://localhost:8090"
 
 
 def main():
@@ -285,7 +285,7 @@ def main():
     # Apply environment variable fallbacks for optional parameters
     user_input = config.user_input
     session_id = config.session_id or os.getenv("SESSION_ID", "")
-    api_url = config.api_url or os.getenv("API_URL", "http://localhost:8089")
+    api_url = config.api_url or os.getenv("API_URL", "http://localhost:8090")
 
     # Build request body
     request_body = {"user_input": user_input}
